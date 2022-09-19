@@ -1,0 +1,32 @@
+{
+    "name": "awskinesis-server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "directories": {
+        "example": "examples"
+    },
+    "scripts": {
+        "start": "nodemon ./src/index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/junhyuk0801/AWSKinesisVideoStreamExample.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/junhyuk0801/AWSKinesisVideoStreamExample/issues"
+    },
+    "homepage": "https://github.com/junhyuk0801/AWSKinesisVideoStreamExample#readme",
+    "dependencies": {
+        "amazon-kinesis-video-streams-webrtc": "^2.0.0",
+        "aws-sdk": "^2.1218.0",
+        "dotenv": "^16.0.2",
+        "ejs": "^3.1.8",
+        "express": "^4.18.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.20"
+    }
+}
