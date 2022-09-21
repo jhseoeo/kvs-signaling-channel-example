@@ -12,9 +12,7 @@ function configureLogging() {
             })
             .join(" ");
         $("#logs").append(
-            $(`<div class="${level.toLowerCase()}">`).text(
-                `[${new Date().toISOString()}] [${level}] ${text}\n`
-            )
+            $(`<div class="${level.toLowerCase()}">`).text(`[${new Date().toISOString()}] [${level}] ${text}\n`)
         );
         const logsContainer = document.getElementById("logs");
         logsContainer.scrollTo(0, logsContainer.scrollHeight);
@@ -223,10 +221,7 @@ fields.forEach(({ field, type, name }) => {
                 fields
                     .filter((fieldItem) => fieldItem.name === name)
                     .forEach((fieldItem) => {
-                        localStorage.setItem(
-                            fieldItem.field,
-                            fieldItem.field === field
-                        );
+                        localStorage.setItem(fieldItem.field, fieldItem.field === field);
                     });
             } else {
                 localStorage.setItem(field, $(id).val());

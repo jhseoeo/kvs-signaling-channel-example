@@ -26,5 +26,5 @@ async function createSignalingChannel(formValues) {
         })
         .promise();
     const channelARN = describeSignalingChannelResponse.ChannelInfo.ChannelARN;
-    console.log('[CREATE_SIGNALING_CHANNEL] Channel ARN: ', channelARN);
+    console.log("[CREATE_SIGNALING_CHANNEL] Channel ARN: ", channelARN);
 }

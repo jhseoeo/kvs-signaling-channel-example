@@ -1,10 +1,12 @@
 const express = require("express");
 const path = require("path");
-const { kinesis } = require("./util/kinesis");
+const kinesisRouter = require("./routes/kinesis");
+const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -20,13 +22,10 @@ app.get("/", (req, res) => {
     });
 });
 
-app.get("/kinesis", async (req, res) => {
-    const response = await kinesis.createChannel("NewChannel", "MASTER");
-    return res.status(200).json(response);
-});
+app.use("/kinesis", kinesisRouter);
 
 app.get("/test", async (req, res) => {
-    return res.render("index.html");
+    return res.render("test.html");
 });
 
 app.listen(3000, () => {

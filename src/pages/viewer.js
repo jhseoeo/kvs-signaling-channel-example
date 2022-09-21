@@ -3,13 +3,7 @@
  */
 const viewer = {};
 
-async function startViewer(
-    localView,
-    remoteView,
-    formValues,
-    onStatsReport,
-    onRemoteDataMessage
-) {
+async function startViewer(localView, remoteView, formValues, onStatsReport, onRemoteDataMessage) {
     viewer.localView = localView;
     viewer.remoteView = remoteView;
 
@@ -42,25 +36,20 @@ async function startViewer(
             },
         })
         .promise();
-    const endpointsByProtocol =
-        getSignalingChannelEndpointResponse.ResourceEndpointList.reduce(
-            (endpoints, endpoint) => {
-                endpoints[endpoint.Protocol] = endpoint.ResourceEndpoint;
-                return endpoints;
-            },
-            {}
-        );
+    const endpointsByProtocol = getSignalingChannelEndpointResponse.ResourceEndpointList.reduce((endpoints, endpoint) => {
+        endpoints[endpoint.Protocol] = endpoint.ResourceEndpoint;
+        return endpoints;
+    }, {});
     console.log("[VIEWER] Endpoints: ", endpointsByProtocol);
 
-    const kinesisVideoSignalingChannelsClient =
-        new AWS.KinesisVideoSignalingChannels({
-            region: formValues.region,
-            accessKeyId: formValues.accessKeyId,
-            secretAccessKey: formValues.secretAccessKey,
-            sessionToken: formValues.sessionToken,
-            endpoint: endpointsByProtocol.HTTPS,
-            correctClockSkew: true,
-        });
+    const kinesisVideoSignalingChannelsClient = new AWS.KinesisVideoSignalingChannels({
+        region: formValues.region,
+        accessKeyId: formValues.accessKeyId,
+        secretAccessKey: formValues.secretAccessKey,
+        sessionToken: formValues.sessionToken,
+        endpoint: endpointsByProtocol.HTTPS,
+        correctClockSkew: true,
+    });
 
     // Get ICE server configuration
     const getIceServerConfigResponse = await kinesisVideoSignalingChannelsClient
@@ -100,9 +89,7 @@ async function startViewer(
         systemClockOffset: kinesisVideoClient.config.systemClockOffset,
     });
 
-    const resolution = formValues.widescreen
-        ? { width: { ideal: 1280 }, height: { ideal: 720 } }
-        : { width: { ideal: 640 }, height: { ideal: 480 } };
+    const resolution = formValues.widescreen ? { width: { ideal: 1280 }, height: { ideal: 720 } } : { width: { ideal: 640 }, height: { ideal: 480 } };
     const constraints = {
         video: formValues.sendVideo ? resolution : false,
         audio: formValues.sendAudio,
@@ -113,18 +100,14 @@ async function startViewer(
     };
     viewer.peerConnection = new RTCPeerConnection(configuration);
     if (formValues.openDataChannel) {
-        viewer.dataChannel =
-            viewer.peerConnection.createDataChannel("kvsDataChannel");
+        viewer.dataChannel = viewer.peerConnection.createDataChannel("kvsDataChannel");
         viewer.peerConnection.ondatachannel = (event) => {
             event.channel.onmessage = onRemoteDataMessage;
         };
     }
 
     // Poll for connection stats
-    viewer.peerConnectionStatsInterval = setInterval(
-        () => viewer.peerConnection.getStats().then(onStatsReport),
-        1000
-    );
+    viewer.peerConnectionStatsInterval = setInterval(() => viewer.peerConnection.getStats().then(onStatsReport), 1000);
 
     viewer.signalingClient.on("open", async () => {
         console.log("[VIEWER] Connected to signaling service");
@@ -134,17 +117,8 @@ async function startViewer(
         // Otherwise, the browser will throw an error saying that either video or audio has to be enabled.
         if (formValues.sendVideo || formValues.sendAudio) {
             try {
-                viewer.localStream = await navigator.mediaDevices.getUserMedia(
-                    constraints
-                );
-                viewer.localStream
-                    .getTracks()
-                    .forEach((track) =>
-                        viewer.peerConnection.addTrack(
-                            track,
-                            viewer.localStream
-                        )
-                    );
+                viewer.localStream = await navigator.mediaDevices.getUserMedia(constraints);
+                viewer.localStream.getTracks().forEach((track) => viewer.peerConnection.addTrack(track, viewer.localStream));
                 localView.srcObject = viewer.localStream;
             } catch (e) {
                 console.error("[VIEWER] Could not find webcam");
@@ -164,9 +138,7 @@ async function startViewer(
         // When trickle ICE is enabled, send the offer now and then send ICE candidates as they are generated. Otherwise wait on the ICE candidates.
         if (formValues.useTrickleICE) {
             console.log("[VIEWER] Sending SDP offer");
-            viewer.signalingClient.sendSdpOffer(
-                viewer.peerConnection.localDescription
-            );
+            viewer.signalingClient.sendSdpOffer(viewer.peerConnection.localDescription);
         }
         console.log("[VIEWER] Generating ICE candidates");
     });
@@ -207,9 +179,7 @@ async function startViewer(
             // When trickle ICE is disabled, send the offer now that all the ICE candidates have ben generated.
             if (!formValues.useTrickleICE) {
                 console.log("[VIEWER] Sending SDP offer");
-                viewer.signalingClient.sendSdpOffer(
-                    viewer.peerConnection.localDescription
-                );
+                viewer.signalingClient.sendSdpOffer(viewer.peerConnection.localDescription);
             }
         }
     });

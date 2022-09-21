@@ -1,6 +1,5 @@
 const kinesisVideo = require("aws-sdk/clients/kinesisvideo");
-const SigV4RequestSigner =
-    require("amazon-kinesis-video-streams-webrtc").SigV4RequestSigner;
+const SigV4RequestSigner = require("amazon-kinesis-video-streams-webrtc").SigV4RequestSigner;
 const KinesisVideoSignalingChannels = require("aws-sdk/clients/kinesisvideosignalingchannels");
 require("dotenv").config();
 
@@ -26,10 +25,7 @@ class KinesisUtil {
             try {
                 this.kinesisClient = new kinesisVideo({ ...this.credential });
             } catch (err) {
-                console.error(
-                    "An error is occured creating Kinesis Client",
-                    err.message
-                );
+                console.error("An error is occured creating Kinesis Client", err.message);
             }
         }
     }
@@ -53,9 +49,7 @@ class KinesisUtil {
                 console.warn("Channel already exists:", ChannelName);
             } else {
                 // CREATE NEW CHANNEL
-                await this.kinesisClient
-                    .createSignalingChannel({ ChannelName })
-                    .promise();
+                await this.kinesisClient.createSignalingChannel({ ChannelName }).promise();
             }
 
             const describeSignalingChannelResponse = await this.kinesisClient
@@ -63,19 +57,13 @@ class KinesisUtil {
                 .promise();
             const channelInfo = describeSignalingChannelResponse.ChannelInfo;
 
-            const endpointsByProtocol = await this.listEndpoints(
-                channelInfo.ChannelARN,
-                role
-            );
+            const endpointsByProtocol = await this.listEndpoints(channelInfo.ChannelARN, role);
             if (!endpointsByProtocol) {
                 result.errorCode = 404;
                 return result;
             }
 
-            const iceServers = await this.listICEServers(
-                channelInfo.ChannelARN,
-                endpointsByProtocol.HTTPS
-            );
+            const iceServers = await this.listICEServers(channelInfo.ChannelARN, endpointsByProtocol.HTTPS);
             if (!iceServers) {
                 result.errorCode = 404;
                 return result;
@@ -96,14 +84,8 @@ class KinesisUtil {
                 };
             }
 
-            const signer = new SigV4RequestSigner(
-                process.env.KINESIS_REGION,
-                this.credential
-            );
-            const url = await signer.getSignedURL(
-                endpointsByProtocol.WSS,
-                queryParams
-            );
+            const signer = new SigV4RequestSigner(process.env.KINESIS_REGION, this.credential);
+            const url = await signer.getSignedURL(endpointsByProtocol.WSS, queryParams);
             console.log("Kinesis created channel ARN:", channelInfo.ChannelARN);
             const response = { configuration, url, role };
             return response;
@@ -133,30 +115,27 @@ class KinesisUtil {
             return null;
         }
 
-        const endpointsByProtocol =
-            getSignalingChannelEndpointResponse.ResourceEndpointList.reduce(
-                (endpoints, endpoint) => {
-                    endpoints[endpoint.Protocol] = endpoint.ResourceEndpoint;
-                    return endpoints;
-                },
-                {}
-            );
+        const endpointsByProtocol = getSignalingChannelEndpointResponse.ResourceEndpointList.reduce(
+            (endpoints, endpoint) => {
+                endpoints[endpoint.Protocol] = endpoint.ResourceEndpoint;
+                return endpoints;
+            },
+            {}
+        );
 
         return endpointsByProtocol;
     }
 
     async listICEServers(channelARN, endpoint) {
-        const KinesisVideoSignalingChannelsClient =
-            new KinesisVideoSignalingChannels({
-                ...this.credential,
-                endpoint,
-                correctClockSkew: true,
-            });
+        const KinesisVideoSignalingChannelsClient = new KinesisVideoSignalingChannels({
+            ...this.credential,
+            endpoint,
+            correctClockSkew: true,
+        });
 
-        const getIceServerConfig =
-            KinesisVideoSignalingChannelsClient.getIceServerConfig({
-                ChannelARN: channelARN,
-            }).promise();
+        const getIceServerConfig = KinesisVideoSignalingChannelsClient.getIceServerConfig({
+            ChannelARN: channelARN,
+        }).promise();
 
         const getIceServerConfigResponse = await Promise.race([
             getIceServerConfig,
@@ -180,11 +159,53 @@ class KinesisUtil {
         return iceServers;
     }
 
-    async deleteChannel(ChannelARN) {
+    async getChannelInfo(ChannelName, role, clientId = null) {
+        const describeSignalingChannelResponse = await this.kinesisClient
+            .describeSignalingChannel({ ChannelName })
+            .promise();
+        const channelInfo = describeSignalingChannelResponse.ChannelInfo;
+
+        const endpointsByProtocol = await this.listEndpoints(channelInfo.ChannelARN, role);
+        if (!endpointsByProtocol) {
+            result.errorCode = 404;
+            return result;
+        }
+
+        const iceServers = await this.listICEServers(channelInfo.ChannelARN, endpointsByProtocol.HTTPS);
+        if (!iceServers) {
+            result.errorCode = 404;
+            return result;
+        }
+
+        const configuration = {
+            iceServers,
+            iceTransportPolicy: "all",
+        };
+
+        let queryParams = {
+            "X-Amz-ChannelARN": channelInfo.ChannelARN,
+        };
+        if (clientId) {
+            queryParams = {
+                ...queryParams,
+                "X-Amz-ClientId": clientId,
+            };
+        }
+
+        const signer = new SigV4RequestSigner(process.env.KINESIS_REGION, this.credential);
+        const url = await signer.getSignedURL(endpointsByProtocol.WSS, queryParams);
+        const response = { configuration, url, role };
+        return response;
+    }
+
+    async deleteChannel(ChannelName) {
+        const describeSignalingChannelResponse = await this.kinesisClient
+            .describeSignalingChannel({ ChannelName })
+            .promise();
+        const ChannelARN = describeSignalingChannelResponse.ChannelInfo.ChannelARN;
+
         try {
-            await this.kinesisClient
-                .deleteSignalingChannel({ ChannelARN })
-                .promise();
+            await this.kinesisClient.deleteSignalingChannel({ ChannelARN }).promise();
         } catch (err) {
             console.error("An error is occured deleting channel", err.message);
         }
