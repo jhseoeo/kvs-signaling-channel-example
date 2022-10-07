@@ -1,9 +1,13 @@
 import { useState } from "react";
 import "./player.css";
-const createSignalingChannel = require("../lib/kinesis/createChannel");
-const deleteSignalingChannel = require("../lib/kinesis/deleteChannel");
-const getSignalingChannelInfo = require("../lib/kinesis/getChannelInfo");
+const createSignalingChannel = require("../../lib/kinesis/createChannel");
+const deleteSignalingChannel = require("../../lib/kinesis/deleteChannel");
+const getSignalingChannelInfo = require("../../lib/kinesis/getChannelInfo");
 
+/**
+ * Role selector for clients - Master or Viewer
+ * @returns {JSX.Element} Selector page
+ */
 function Selector() {
     let [channelName, setChannelName] = useState("");
 

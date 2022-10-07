@@ -1,8 +1,8 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import Selector from "./components/selector";
-import Master from "./components/master";
-import Viewer from "./components/viewer";
+import Selector from "./components/VideoStreamPlayer/selector";
+import Master from "./components/VideoStreamPlayer/master";
+import Viewer from "./components/VideoStreamPlayer/viewer";
 
 function App() {
     return (

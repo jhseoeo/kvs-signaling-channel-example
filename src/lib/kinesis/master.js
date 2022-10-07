@@ -10,12 +10,17 @@ class CustomSigner {
     }
 }
 
-async function startMaster(kinesisInfo, localView, remoteView, onStatsReport) {
+/**
+ * Start WebRTC Connection for Master side.
+ * @param {object} kinesisInfo - Information about KInesis
+ * @param {HTMLVideoElement} localView - HTML Video Player that displays Webcam view of master
+ * @param {function(string)} onStatsReport - callback function to inform current stat of webrtc connection
+ * @return {function():void} close function that sends connection termination signal to another peer
+ */
+async function startMaster(kinesisInfo, localView, onStatsReport) {
     this.localView = localView;
-    this.remoteView = remoteView;
 
     const role = "MASTER";
-    // this.clientId = "MASTER_ID";
     this.clientId = null;
     this.role = role;
     this.peerConnectionByClientId = {};
@@ -79,13 +84,13 @@ async function startMaster(kinesisInfo, localView, remoteView, onStatsReport) {
         });
 
         // As remote tracks are received, add them to the remote view
-        peerConnection.addEventListener("track", (event) => {
-            console.log("[MASTER] Received remote track from client: " + remoteClientId);
-            if (remoteView.srcObject) {
-                return;
-            }
-            remoteView.srcObject = event.streams[0];
-        });
+        // peerConnection.addEventListener("track", (event) => {
+        //     console.log("[MASTER] Received remote track from client: " + remoteClientId);
+        //     if (remoteView.srcObject) {
+        //         return;
+        //     }
+        //     remoteView.srcObject = event.streams[0];
+        // });
 
         // If there's no video/audio, this.localStream will be null. So, we should skip adding the tracks from it.
         if (this.localStream) {
@@ -97,8 +102,8 @@ async function startMaster(kinesisInfo, localView, remoteView, onStatsReport) {
         console.log("[MASTER] Creating SDP answer for client: " + remoteClientId);
         await peerConnection.setLocalDescription(
             await peerConnection.createAnswer({
-                offerToReceiveAudio: true,
-                offerToReceiveVideo: true,
+                offerToReceiveAudio: false,
+                offerToReceiveVideo: false,
             })
         );
 
@@ -126,6 +131,9 @@ async function startMaster(kinesisInfo, localView, remoteView, onStatsReport) {
 
     console.log("[MASTER] Starting master connection");
     this.signalingClient.open();
+
+    // close function that sends connection termination signal to another peer
+    return () => {};
 }
 
 module.exports = startMaster;

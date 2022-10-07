@@ -10,10 +10,15 @@ class CustomSigner {
     }
 }
 
-async function startViewer(kinesisInfo, localView, remoteView, pollConnection) {
-    // const result = { errorCode: ERROR_CODE.UNKNOWN_ERROR };
+/**
+ * Start WebRTC Connection for Viewer side.
+ * @param {object} kinesisInfo - Information about KInesis
+ * @param {HTMLVideoElement} localView - HTML Video Player that displays Webcam view of master
+ * @param {function(string)} onStatsReport - callback function to inform current stat of webrtc connection
+ * @return {function():void} close function that sends connection termination signal to another peer
+ */
+async function startViewer(kinesisInfo, remoteView, pollConnection) {
     const role = "VIEWER";
-    // this.clientId = "MASTER_ID";
     this.clientId = "strong";
 
     const configuration = kinesisInfo.configuration;
@@ -26,7 +31,7 @@ async function startViewer(kinesisInfo, localView, remoteView, pollConnection) {
     this.signalingClient = new SignalingClient({
         requestSigner: new CustomSigner(kinesisInfo.url),
         role,
-        clientId: "hi",
+        clientId: this.clientId,
         region: "default",
         channelARN: "default",
         channelEndpoint: "default",
@@ -41,17 +46,18 @@ async function startViewer(kinesisInfo, localView, remoteView, pollConnection) {
         // Get a stream from the webcam, add it to the peer connection, and display it in the local view.
         // If no video/audio needed, no need to request for the sources.
         // Otherwise, the browser will throw an error saying that either video or audio has to be enabled.
-        try {
-            this.localStream = await navigator.mediaDevices.getUserMedia({
-                video: { width: { ideal: 1280 }, height: { ideal: 720 } },
-                audio: false,
-            });
-            this.localStream.getTracks().forEach((track) => this.peerConnection.addTrack(track, this.localStream));
-            localView.srcObject = this.localStream;
-        } catch (e) {
-            console.error("[VIEWER] Could not find webcam");
-            return;
-        }
+        // try {
+        //     this.localStream = await navigator.mediaDevices.getUserMedia({
+        //         video: { width: { ideal: 1280 }, height: { ideal: 720 } },
+        //         // video: false,
+        //         audio: false,
+        //     });
+        //     this.localStream.getTracks().forEach((track) => this.peerConnection.addTrack(track, this.localStream));
+        //     localView.srcObject = this.localStream;
+        // } catch (e) {
+        //     console.error("[VIEWER] Could not find webcam");
+        //     return;
+        // }
 
         // Create an SDP offer to send to the master
         console.log("[VIEWER] Creating SDP offer");
@@ -117,6 +123,9 @@ async function startViewer(kinesisInfo, localView, remoteView, pollConnection) {
 
     console.log("[VIEWER] Starting viewer connection");
     this.signalingClient.open();
+
+    // close function that sends connection termination signal to another peer
+    return () => {};
 }
 
 module.exports = startViewer;
