@@ -9,7 +9,7 @@ const USERNAME = "FIXED_USER_NAME";
 
 /**
  * Page to view WebCAM video stream transfered from Master
- * @param {string} channelName - /viewer/:channelName. Name of the channel
+ * @param {string} params.channelName - /viewer/:channelName. Name of the channel
  * @returns {JSX.Element} WebCAM Viewer page
  */
 function Viewer() {

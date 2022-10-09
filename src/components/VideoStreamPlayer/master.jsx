@@ -6,7 +6,7 @@ const startMaster = require("../../lib/kinesis/master");
 
 /**
  * Page that produces video stream and transfers to Viewer
- * @param {string} channelName - /master/:channelName. Name of the channel
+ * @param {string} params.channelName - /master/:channelName. Name of the channel
  * @returns {JSX.Element} WebCAM Master page
  */
 function Master() {
