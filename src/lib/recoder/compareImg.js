@@ -1,6 +1,6 @@
 const compareImages = require("resemblejs/compareImages");
 
-async function getDiff(image1, image2, threshold = 30) {
+async function getDiff(image1, image2, threshold) {
     return new Promise((resolve, reject) => {
         try {
             const options = {
@@ -11,7 +11,7 @@ async function getDiff(image1, image2, threshold = 30) {
                 if (err) {
                     console.error(err);
                 } else {
-                    resolve(data.misMatchPercentage);
+                    resolve(Number(data.misMatchPercentage));
                 }
             });
         } catch (e) {
