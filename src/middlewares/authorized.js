@@ -63,12 +63,15 @@ module.exports.Authorized = async (req, res, next) => {
  * A middleware that pass only unauthorized requests
  */
 module.exports.notAuthorized = async (req, res, next) => {
-    if (req.headers.authorization === undefined) {
+    const authorization = req.headers.authorization || req.cookies.access;
+    const refresh = req.headers.refresh || req.cookies.refresh;
+
+    if (authorization === undefined) {
         // case 0 : Authorzation 헤더 자체가 없는 경우
         return next();
     }
 
-    const decoded = JWT.decode(req.headers.authorization.split("Bearer ")[1]);
+    const decoded = JWT.decode(authorization.split("Bearer ")[1]);
     if (decoded === null) {
         // case 1 : access token이 잘못되어, decode할 수 없는 경우
         return res.status(403).send({
@@ -78,8 +81,8 @@ module.exports.notAuthorized = async (req, res, next) => {
         });
     }
     const id = decoded.id;
-    const accessToken = jwt.verify(req.headers.authorization.split("Bearer ")[1]);
-    const refreshToken = await jwt.refreshVerify(req.headers.refresh.split("Bearer ")[1], id);
+    const accessToken = jwt.verify(authorization.split("Bearer ")[1]);
+    const refreshToken = await jwt.refreshVerify(refresh.split("Bearer ")[1], id);
 
     if (!accessToken.ok && !refreshToken) {
         // case 2 : access token과 refresh token이 모두 만료된 경우

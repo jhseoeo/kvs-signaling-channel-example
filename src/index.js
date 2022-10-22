@@ -34,6 +34,6 @@ app.use("/auth", AuthenticateRouter);
 
 const server = https.createServer(options, app);
 
-server.listen(3000, () => {
-    console.log("app running on port : 3000");
+server.listen(8484, () => {
+    console.log("app running on port : 8484");
 });

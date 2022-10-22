@@ -9,7 +9,8 @@ const router = express.Router();
  * @param {string} requestBody.role - Which role to get channel info
  * @return
  */
-router.post("/", Authorized, async (req, res) => {
+router.post("/", async (req, res) => {
+    // router.post("/", Authorized, async (req, res) => {
     const { channelName, role } = req.body;
     try {
         const response = await kinesis.createChannel(channelName, role);
@@ -25,7 +26,8 @@ router.post("/", Authorized, async (req, res) => {
  * @param {string} routeParameter.channelName
  * @return
  */
-router.get("/master/:channelName", Authorized, async (req, res) => {
+router.get("/master/:channelName", async (req, res) => {
+    // router.get("/master/:channelName", Authorized, async (req, res) => {
     const { channelName } = req.params;
     try {
         const response = await kinesis.getChannelInfo(channelName, "MASTER", null);
@@ -41,7 +43,8 @@ router.get("/master/:channelName", Authorized, async (req, res) => {
  * @param {string} routeParameter.channelName
  * @return
  */
-router.get("/viewer/:channelName/:clientId", Authorized, async (req, res) => {
+router.get("/viewer/:channelName/:clientId", async (req, res) => {
+    // router.get("/viewer/:channelName/:clientId", Authorized, async (req, res) => {
     const { channelName, clientId } = req.params;
     try {
         const response = await kinesis.getChannelInfo(channelName, "VIEWER", clientId);
@@ -57,7 +60,8 @@ router.get("/viewer/:channelName/:clientId", Authorized, async (req, res) => {
  * @param {string} routeParameter.channelName
  * @return
  */
-router.delete("/:channelName", Authorized, async (req, res) => {
+router.delete("/:channelName", async (req, res) => {
+    // router.delete("/:channelName", Authorized, async (req, res) => {
     const { channelName } = req.params;
     try {
         await kinesis.deleteChannel(channelName);

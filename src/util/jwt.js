@@ -2,7 +2,9 @@
 
 const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
-const redisClient = require("../util/redis");
+const redisClient = require("./redis_auth");
+require("dotenv").config();
+
 const secret = process.env.JWT_SECRET;
 
 module.exports = {

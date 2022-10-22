@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("../util/jwt");
-const redisClient = require("../util/redis");
+const redisClient = require("../util/redis_auth");
 const { User } = require("../models");
 
 /**
@@ -23,22 +23,24 @@ module.exports.register = async (userid, password, nickname) => {
         } else {
             // create row in user account table
             const hash = await bcrypt.hash(password, 12);
-            await Users.create({
+            await User.create({
                 userid,
                 password: hash,
                 nickname,
             });
-            return res.status(200).send({
+            return {
+                statusCode: 200,
                 ok: true,
-                message: "the account is successfully created",
-            });
+                message: "account is successfully created",
+            };
         }
     } catch (e) {
         console.error(e);
-        return res.status(500).send({
+        return {
+            statusCode: 500,
             ok: false,
             message: "internal server error",
-        });
+        };
     }
 };
 
@@ -56,13 +58,20 @@ module.exports.login = async (userid, password) => {
                 userid,
             },
         });
-        success = await bcrypt.compare(password, idExist.password);
+
+        if (idExist) success = await bcrypt.compare(password, idExist.password);
+        else
+            return {
+                statusCode: 401,
+                ok: false,
+                message: "id is not exists",
+            };
     } catch (e) {
         console.error(e);
         return {
-            statusCode: 401,
+            statusCode: 500,
             ok: false,
-            message: "login failed",
+            message: e,
         };
     }
 
