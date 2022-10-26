@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./player.css";
+import Header from "../header"
 const getSignalingChannelInfo = require("../../lib/kinesis/getChannelInfo");
 const startViewer = require("../../lib/kinesis/viewer");
 
@@ -31,8 +32,15 @@ function Viewer() {
 
     return (
         <>
+            <Header/>
+            {/* <br/> */}
+            {/* <div style={{
+                position:"absolute",
+                right:"85%",
+                top:"13%"
+            }}>wefwfe</div> */}
             <video className="viewer-remote-view" autoPlay playsInline controls muted ref={viewerRemoteView} />
-            <button>close channel</button>
+            {/* <button>close channel</button> */}
         </>
     );
 }

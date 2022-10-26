@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import RecordVideo from "../../lib/recoder/recoder";
+import Header from "../header"
 
 /**
  * Page that produces video stream and transfers to Viewer
@@ -28,6 +29,7 @@ function Recorder() {
 
     return (
         <div>
+            <Header/>
             <video className="recorder-view" autoPlay playsInline controls muted ref={recorderView} />
             <button
                 id="start-record"

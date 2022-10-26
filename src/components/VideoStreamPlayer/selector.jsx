@@ -70,6 +70,16 @@ function Selector() {
             >
                 Connect Viewer
             </button>
+            <br />
+            <button
+                className="channel-button"
+                type="button"
+                onClick={async () => {
+                    window.location.href = "/recorder/";
+                }}
+            >
+                Connect Recoder
+            </button>
         </div>
     );
 }

@@ -5,3 +5,11 @@
 .channel-button {
     margin: 5px;
 }
+
+.viewer-remote-view {
+    width: 80%;
+    position: absolute;
+    right: 10%;
+    top: 10%;
+    margin-top: 60px;
+}
