@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Header from "../header"
+import ReactJsAlert from "reactjs-alert";
 
 function Register(props) {
     const [input, setInput] = useState({
@@ -23,6 +24,12 @@ function Register(props) {
         }));
         validateInput(e);
     }
+
+    const [status, setStatus] = useState(false);
+    const [type, setType] = useState("");
+    const [title, setTitle] = useState("");
+    const [quote, setQuote] = useState("");
+    const [success, setSuccess] = useState(false);
 
     const validateInput = e => {
         let { name, value } = e.target;
@@ -63,14 +70,50 @@ function Register(props) {
         });
     }
 
+    const callback = () => {
+        if (success) {
+            window.location.href="/login"
+        } else {
+            window.location.href="/register"
+        }
+    }
+
+    const register = async () => {
+        const res = await fetch(process.env.REACT_APP_PROXY_HOST + "/auth/register", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userid: input.id,
+                password: input.password,
+                nickname: input.nickname
+            })
+        }).then(res => res.json());
+
+        if (res.ok) {
+            setStatus(true);
+            setType("success");
+            setTitle("회원가입에 성공하였습니다.");
+            setQuote("로그인 페이지로 이동합니다.");
+            setSuccess(true)
+        } else {
+            setStatus(true);
+            setType("error");
+            setTitle("회원가입에 실패하였습니다");
+            // setQuote(res.reason);
+            setQuote("res.reason");
+            setSuccess(false)
+        }
+    }
+
 
     return (
         <div>
             <Header/>
             <div className="text-center m-5-auto">
                 <h2>회원가입</h2>
-                <form action="/">
-
+                <form>
                     <p>
                         <label>ID</label><br />
                         <input type="text" name="id" onChange={onInputChange} required />
@@ -92,10 +135,23 @@ function Register(props) {
 
 
                     <p>
-                        <button id="sub_btn" type="submit" disabled={!(input.id && input.nickname && input.password && input.confirmPassword && !error.confirmPassword)}>Register</button>
+                        <button id="sub_btn" type="button" disabled={!(input.id && input.nickname && input.password && input.confirmPassword && !error.confirmPassword)} onClick={register}>Register</button>
                     </p>
                 </form>
+
+                <ReactJsAlert
+                    status={status}
+                    type={type}
+                    title={title}
+                    quotes={true}
+                    quote={quote}
+                    button={"확인"}
+                    autoCloseIn={99999999}
+                    Close={callback}
+                />
             </div>
+
+            
         </div>
     )
 }

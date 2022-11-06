@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
 import { slide as Menu } from 'react-burger-menu'
 import Button from 'react-bootstrap/Button';
+import { hover } from '@testing-library/user-event/dist/hover';
+import { getCookie, setCookie } from '../lib/cookie';
 
 
 function Header(props) {
+    const [loginOrOut, setLoginOrOut] = useState("로그인")
+
     const menuStyle = {
         backgroundColor:"#0055FF",
         border:"0pt",
@@ -17,6 +21,10 @@ function Header(props) {
         float:"right",
         height:"60px",
         marginRight:"70px",
+        cursor:"pointer",
+        hover: {
+            textDecoration: "underline"
+        }
     }
 
     const menuStyle2 = {
@@ -24,6 +32,26 @@ function Header(props) {
         border:"0",
         float:"right",
         height:"60px",
+    }
+
+    const currentCookie = getCookie('access')
+
+    let loginButton
+    if (currentCookie !== "undefined") {
+        loginButton = <Button style={menuStyle1} onClick={() => {
+            setCookie('access', undefined)
+            setCookie('refresh', undefined)
+            window.location.href = "/";
+        }}>로그아웃</Button>
+    } else {
+        loginButton = <Button style={menuStyle1} onClick={() => {window.location.href = "/login";}}>로그인</Button>
+    }
+
+    let registerButton
+    if (currentCookie !== "undefined") {
+        registerButton = <></>
+    } else {
+        registerButton = <Button style={menuStyle2} onClick={() => {window.location.href = "/register";}}>회원가입</Button>
     }
 
     return (
@@ -37,8 +65,8 @@ function Header(props) {
         }}>
             <div>
                 <Button style={menuStyle} onClick={() => {window.location.href = "/";}}>Home</Button>
-                <Button style={menuStyle1} onClick={() => {window.location.href = "/login";}}>로그인</Button>
-                <Button style={menuStyle2} onClick={() => {window.location.href = "/register";}}>회원가입</Button>
+                {loginButton}
+                {registerButton}
             </div>
             <Menu right>
                 <a id="home" className="menu-item" href="/">홈</a>
