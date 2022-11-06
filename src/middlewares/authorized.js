@@ -44,16 +44,19 @@ module.exports.Authorized = async (req, res, next) => {
             const newAccessToken = jwt.sign(id);
             res.cookie("access", newAccessToken);
             req.cookies.access = newAccessToken;
+            req.id = id;
             next();
         }
     } else {
         if (!refreshToken) {
-            // case 3 : access token은 유효하지만 refresh token이 만료된 경우
+            // case 4 : access token은 유효하지만 refresh token이 만료된 경우
             const newRefreshToken = jwt.refresh();
             res.cookie("refresh", newRefreshToken);
             req.cookies.refresh = newRefreshToken;
+            req.id = id;
             next();
         } else {
+            req.id = id;
             next();
         }
     }

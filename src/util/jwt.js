@@ -7,59 +7,64 @@ require("dotenv").config();
 
 const secret = process.env.JWT_SECRET;
 
-module.exports = {
-    // access token 발급
-    sign: (userid) => {
-        const payload = { id: userid };
+// access token 발급
+function sign(id) {
+    const payload = { id };
 
-        return jwt.sign(payload, secret, {
-            algorithm: "HS256", // 암호화 알고리즘
-            expiresIn: "2h", // 유효기간
-        });
-    },
+    return jwt.sign(payload, secret, {
+        algorithm: "HS256", // 암호화 알고리즘
+        expiresIn: "2h", // 유효기간
+    });
+}
 
-    // access token 검증
-    verify: (token) => {
-        let decoded = null;
-        try {
-            decoded = jwt.verify(token, secret);
-            return {
-                ok: true,
-                id: decoded.id,
-            };
-        } catch (err) {
-            return {
-                ok: false,
-                message: err.message,
-            };
-        }
-    },
+// access token 검증
+function verify(token) {
+    let decoded = null;
+    try {
+        decoded = jwt.verify(token, secret);
+        return {
+            ok: true,
+            id: decoded.id,
+        };
+    } catch (err) {
+        return {
+            ok: false,
+            message: err.message,
+        };
+    }
+}
 
-    // refresh token 발급
-    refresh: () => {
-        // refresh token은 payload 없이 발급
-        return jwt.sign({}, secret, {
-            algorithm: "HS256",
-            expiresIn: "14d",
-        });
-    },
+// refresh token 발급
+function refresh() {
+    // refresh token은 payload 없이 발급
+    return jwt.sign({}, secret, {
+        algorithm: "HS256",
+        expiresIn: "14d",
+    });
+}
 
-    // refresh token 검증
-    refreshVerify: async (token, userId) => {
-        const getAsync = promisify(redisClient.get).bind(redisClient);
+// refresh token 검증
+async function refreshVerify(token, id) {
+    const getAsync = promisify(redisClient.get).bind(redisClient);
 
-        try {
-            const data = await getAsync(userId);
-            if (token === data) {
-                try {
-                    jwt.verify(token, secret);
-                    return true;
-                } catch (e) {
-                    return false;
-                }
+    try {
+        const data = await getAsync(id);
+        if (token === data) {
+            try {
+                jwt.verify(token, secret);
+                return true;
+            } catch (e) {
+                return false;
             }
-        } catch (e) {
-            return false;
         }
-    },
+    } catch (e) {
+        return false;
+    }
+}
+
+module.exports = {
+    sign,
+    verify,
+    refresh,
+    refreshVerify,
 };

@@ -12,6 +12,7 @@ const router = express.Router();
  */
 router.post("/register", notAuthorized, async (req, res) => {
     const { userid, password, nickname } = req.body;
+    console.log(userid, password, nickname);
     const status = await register(userid, password, nickname);
     return res.status(status.statusCode).send(status);
 });

@@ -10,7 +10,7 @@ const { User } = require("../models");
  * @param {string} nickname - Nickname of the account
  * @return {{statusCode: int, ok: boolean, message: string}} Result of registration
  */
-module.exports.register = async (userid, password, nickname) => {
+async function register(userid, password, nickname) {
     try {
         // check if the user id is already exists
         const idExist = await User.findOne({ where: { userid } });
@@ -39,10 +39,10 @@ module.exports.register = async (userid, password, nickname) => {
         return {
             statusCode: 500,
             ok: false,
-            message: "internal server error",
+            message: e,
         };
     }
-};
+}
 
 /**
  * Login Account
@@ -50,10 +50,11 @@ module.exports.register = async (userid, password, nickname) => {
  * @param {string} password - Password to login
  * @return {{statusCode: int, ok: boolean, message: string, data?: {accessToken: string, refreshToken: string}}} Result of login
  */
-module.exports.login = async (userid, password) => {
+async function login(userid, password) {
     let success = null;
+    let idExist;
     try {
-        const idExist = await User.findOne({
+        idExist = await User.findOne({
             where: {
                 userid,
             },
@@ -77,11 +78,12 @@ module.exports.login = async (userid, password) => {
 
     if (success) {
         // access token과 refresh token 발급
-        const accessToken = jwt.sign(userid);
+        const { id } = idExist;
+        const accessToken = jwt.sign(id);
         const refreshToken = jwt.refresh();
 
         // refresh token을 redis에 저장
-        redisClient.set(userid, refreshToken);
+        redisClient.set(id, refreshToken);
 
         return {
             statusCode: 200,
@@ -99,4 +101,9 @@ module.exports.login = async (userid, password) => {
             message: "password is incorrect",
         };
     }
+}
+
+module.exports = {
+    register,
+    login,
 };

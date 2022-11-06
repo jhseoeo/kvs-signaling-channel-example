@@ -3,8 +3,10 @@ const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 
-const WebRTCChannelRouter = require("./routes/WebRTCChannel");
+const WebRTCChannelRouter = require("./routes/Channels");
 const AuthenticateRouter = require("./routes/Auth");
 require("./models").sequelize.sync();
 require("dotenv").config();
@@ -18,9 +20,13 @@ const options = {
 };
 
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
+app.use(cookieParser());
+app.use(
+    bodyParser.urlencoded({
+        extended: true,
+    })
+);
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "../public")));
 
 app.get("/", (req, res) => {
@@ -29,7 +35,7 @@ app.get("/", (req, res) => {
     });
 });
 
-app.use("/webrtcchannel", WebRTCChannelRouter);
+app.use("/channel", WebRTCChannelRouter);
 app.use("/auth", AuthenticateRouter);
 
 const server = https.createServer(options, app);

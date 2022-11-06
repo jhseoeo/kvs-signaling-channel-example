@@ -1,12 +1,5 @@
-// create table member (
-//     id SERIAL primary key,
-//     userid varchar(20) unique not null,
-//     password varchar(20) not null,
-//     nickname varchar(20) not null
-// );
-
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define(
+    const user = sequelize.define(
         "user",
         {
             id: {
@@ -29,7 +22,21 @@ module.exports = (sequelize, DataTypes) => {
             },
         },
         {
+            charset: "utf8", // 한국어 설정
+            collate: "utf8_general_ci", // 한국어 설정
+            tableName: "users", // 테이블 이름
             timestamps: false,
         }
     );
+
+    user.associate = function (models) {
+        user.hasMany(models.clip, {
+            foreignKey: "userid",
+            sourceKey: "id",
+            onDelete: "cascade",
+            onUpdate: "cascade",
+        });
+    };
+
+    return user;
 };
