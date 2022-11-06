@@ -17,13 +17,12 @@ class CustomSigner {
  * @param {function(string)} onStatsReport - callback function to inform current stat of webrtc connection
  * @return {function():void} close function that sends connection termination signal to another peer
  */
-async function startMaster(kinesisInfo, localView, onStatsReport) {
-    this.localView = localView;
-
+async function startMaster(kinesisInfo, localStream, onStatsReport) {
     const role = "MASTER";
     this.clientId = null;
     this.role = role;
     this.peerConnectionByClientId = {};
+    this.localStream = localStream;
 
     const configuration = kinesisInfo.configuration;
 
@@ -40,15 +39,6 @@ async function startMaster(kinesisInfo, localView, onStatsReport) {
     // Get a stream from the webcam and display it in the local view.
     // If no video/audio needed, no need to request for the sources.
     // Otherwise, the browser will throw an error saying that either video or audio has to be enabled.
-    try {
-        this.localStream = await navigator.mediaDevices.getUserMedia({
-            video: { width: { ideal: 1280 }, height: { ideal: 720 } },
-            audio: false,
-        });
-        localView.srcObject = this.localStream;
-    } catch (e) {
-        console.error("[MASTER] Could not find webcam");
-    }
 
     this.signalingClient.on("open", async () => {
         console.log("[MASTER] Connected to signaling service");
@@ -78,8 +68,8 @@ async function startMaster(kinesisInfo, localView, onStatsReport) {
                 console.log("[MASTER] All ICE candidates have been generated for client: " + remoteClientId);
 
                 // When trickle ICE is disabled, send the answer now that all the ICE candidates have ben generated.
-                console.log("[MASTER] Sending SDP answer to client: " + remoteClientId);
-                this.signalingClient.sendSdpAnswer(peerConnection.localDescription, remoteClientId);
+                // console.log("[MASTER] Sending SDP answer to client: " + remoteClientId);
+                // this.signalingClient.sendSdpAnswer(peerConnection.localDescription, remoteClientId);
             }
         });
 

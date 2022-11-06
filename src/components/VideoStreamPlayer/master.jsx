@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { useRef, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import "./player.css";
-const getSignalingChannelInfo = require("../../lib/kinesis/getChannelInfo");
+const createSignalingChannel = require("../../lib/kinesis/createChannel");
+const deleteSignalingChannel = require("../../lib/kinesis/deleteChannel");
 const startMaster = require("../../lib/kinesis/master");
 
 /**
@@ -10,19 +11,35 @@ const startMaster = require("../../lib/kinesis/master");
  * @returns {JSX.Element} WebCAM Master page
  */
 function Master() {
-    const { channelName } = useParams();
     const masterLocalView = useRef();
+    const localStream = useRef();
+
+    useState(() => {}, []);
 
     useEffect(() => {
-        getSignalingChannelInfo(channelName, "MASTER")
-            .then((channelData) => {
-                startMaster(channelData, masterLocalView.current, () => {});
-            })
-            .catch((e) => {
-                console.log(e);
-            });
+        const makeLocalStream = async () => {
+            try {
+                localStream.current = await navigator.mediaDevices.getUserMedia({
+                    video: { width: { ideal: 1280 }, height: { ideal: 720 } },
+                    audio: false,
+                });
+                masterLocalView.current.srcObject = localStream.current;
+            } catch (e) {
+                console.error("[MASTER] Could not find webcam");
+            }
 
-        // return () => {deleteSignalingChannel(channelName)};
+            createSignalingChannel()
+                .then((channelData) => {
+                    startMaster(channelData.channelData, localStream.current, () => {});
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+        };
+        makeLocalStream();
+        window.onbeforeunload = () => {
+            deleteSignalingChannel();
+        };
         // eslint-disable-next-line
     }, []);
 

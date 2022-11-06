@@ -16,8 +16,8 @@ function App() {
                 <Route path="/" element={<Home />}></Route>
                 <Route path="/login" element={<Login />}></Route>
                 <Route path="/register" element={<Register />}></Route>
-                <Route path="/master/:channelName" element={<Master />}></Route>
-                <Route path="/viewer/:channelName" element={<Viewer />}></Route>
+                <Route path="/master/" element={<Master />}></Route>
+                <Route path="/viewer/" element={<Viewer />}></Route>
                 <Route path="/recorder" element={<Recoder />}></Route>
                 <Route path="/modeSelector" element={<ModeSelector />}></Route>
             </Routes>

@@ -106,8 +106,8 @@ async function startViewer(kinesisInfo, remoteView, pollConnection) {
             console.log("[VIEWER] All ICE candidates have been generated");
 
             // When trickle ICE is disabled, send the offer now that all the ICE candidates have ben generated.
-            console.log("[VIEWER] Sending SDP offer");
-            this.signalingClient.sendSdpOffer(this.peerConnection.localDescription);
+            // console.log("[VIEWER] Sending SDP offer");
+            // this.signalingClient.sendSdpOffer(this.peerConnection.localDescription);
         }
     });
 
