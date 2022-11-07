@@ -2,7 +2,6 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Login from "./components/Auth/login";
 import Register from "./components/Auth/register";
-import Selector from "./components/VideoStreamPlayer/selector";
 import Master from "./components/VideoStreamPlayer/master";
 import Viewer from "./components/VideoStreamPlayer/viewer";
 import Recoder from "./components/Tmp_Recorder/recorder";

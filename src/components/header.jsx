@@ -105,10 +105,10 @@ function Header(props) {
                 <a id="home" className="menu-item" href="/">
                     홈
                 </a>
-                <a id="viewer" className="menu-item" href="/viewer/channel-button">
+                <a id="viewer" className="menu-item" href="/viewer">
                     실시간 영상 시청
                 </a>
-                <a id="webcam" className="menu-item" href="/master/channel-button">
+                <a id="webcam" className="menu-item" href="/master">
                     웹캠으로 설정
                 </a>
                 <a id="recoder" className="menu-item" href="/recorder">
