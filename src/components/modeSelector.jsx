@@ -1,45 +1,63 @@
 import React, { useState } from 'react'
 import Header from "../components/header"
+import { Button, Row, Container, Card } from "react-bootstrap";
+import { MdOndemandVideo } from "react-icons/md"
+import { TbVideo } from "react-icons/tb"
+import { FaPhotoVideo } from "react-icons/fa"
 
 function ModeSelector(props) {
+    const iconStyle = {
+        width:"50pt",
+        height:"50pt",
+        color:"#ffffff",
+        marginTop:"30pt",
+        marginBottom:"10pt"
+    }
+
+    const cardStyle = {
+        height:"12rem",
+        width: '16rem',
+        // backgroundColor:"#0d6efd", 
+        marginLeft:"30pt", 
+        marginRight:"30pt",
+        borderRadius:"10pt",
+        fontSize:"15pt"
+    }
+
+    const containerStyle = {
+        width:"100%",
+        marginTop:"15rem",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
+
+    const titleStyle = {
+        color:"#ffffff"
+    }
+
+
     return (
         <>
             <Header/>
-            <div style={{
-                position:"absolute",
-                top:"50%",
-                right:"50%",
-                transform:"translate(50%, -50%)"
-            }}>
-                <button
-                    className="mode-button"
-                    type="button"
-                    onClick={() => {
-                        window.location.href = "/viewer/channel-button";
-                    }}
-                >
-                    실시간 영상 시청하기                
-                </button>
-                <br />
-                <button
-                    className="mode-button"
-                    type="button"
-                    onClick={() => {
-                        window.location.href = "/recorder";
-                    }}
-                >                
-                    웹캠으로 설정하기
-                </button>
-                <br />
-                <button
-                    className="mode-button"
-                    type="button"
-                    onClick={() => {
-                        window.location.href = "/recorder";
-                    }}
-                >
-                    녹화영상 확인하기
-                </button>            
+            <div>
+                <Container style={containerStyle}>
+                    <Row>
+                        <Button style={cardStyle} href="/viewer/channel-button">
+                        <MdOndemandVideo style={iconStyle}/><br/>실시간 영상 시청하기
+                        </Button>
+                        
+                        <Button style={cardStyle} href="/recorder">
+                            <TbVideo style={iconStyle} /><br/>웹캠으로 설정하기
+                        </Button>
+
+                        <Button style={cardStyle} href="/recorder">
+                            <FaPhotoVideo style={iconStyle} /><br/>녹화영상 확인하기
+                        </Button>
+                </Row>
+            </Container>
+                
+
             </div>
         </>
     )

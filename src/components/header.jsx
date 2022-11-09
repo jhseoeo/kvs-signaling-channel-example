@@ -8,14 +8,14 @@ function Header(props) {
     const [loginOrOut, setLoginOrOut] = useState("로그인");
 
     const menuStyle = {
-        backgroundColor: "#0055FF",
+        backgroundColor: "#0d6efd",
         border: "0pt",
         height: "60px",
         marginLeft: "50px",
     };
 
     const menuStyle1 = {
-        backgroundColor: "#0055FF",
+        backgroundColor: "#0d6efd",
         border: "0pt",
         float: "right",
         height: "60px",
@@ -27,7 +27,7 @@ function Header(props) {
     };
 
     const menuStyle2 = {
-        backgroundColor: "#0055FF",
+        backgroundColor: "#0d6efd",
         border: "0",
         float: "right",
         height: "60px",
@@ -84,7 +84,7 @@ function Header(props) {
                 width: "100%",
                 height: "60px",
                 top: "0%",
-                backgroundColor: "#0055FF",
+                backgroundColor: "#0d6efd",
                 position: "fixed",
                 zIndex: "100",
             }}
