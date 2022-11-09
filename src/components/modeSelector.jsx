@@ -17,7 +17,6 @@ function ModeSelector(props) {
     const cardStyle = {
         height:"12rem",
         width: '16rem',
-        // backgroundColor:"#0d6efd", 
         marginLeft:"30pt", 
         marginRight:"30pt",
         borderRadius:"10pt",
@@ -43,11 +42,11 @@ function ModeSelector(props) {
             <div>
                 <Container style={containerStyle}>
                     <Row>
-                        <Button style={cardStyle} href="/viewer/channel-button">
+                        <Button style={cardStyle} href="/viewer">
                         <MdOndemandVideo style={iconStyle}/><br/>실시간 영상 시청하기
                         </Button>
                         
-                        <Button style={cardStyle} href="/recorder">
+                        <Button style={cardStyle} href="/master">
                             <TbVideo style={iconStyle} /><br/>웹캠으로 설정하기
                         </Button>
 
