@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 primaryKey: true,
                 references: {
-                    model: "user",
+                    model: "users",
                     key: "id",
                 },
             },

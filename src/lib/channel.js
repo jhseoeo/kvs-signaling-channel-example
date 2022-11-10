@@ -1,6 +1,7 @@
 const kinesis = require("../util/kinesis");
 const { promisify } = require("util");
 const redisClient = require("../util/redis_channel");
+const { channel } = require("diagnostics_channel");
 
 const async_get = promisify(redisClient.get).bind(redisClient);
 
@@ -12,7 +13,7 @@ const async_get = promisify(redisClient.get).bind(redisClient);
 async function createChannel(id) {
     const channelData = await async_get(id);
 
-    if (channelData === null) {
+    if (channelData !== "e") {
         try {
             const channelData = await kinesis.createChannel(id, "MASTER");
             redisClient.set(id, "e");
@@ -45,9 +46,8 @@ async function createChannel(id) {
  */
 async function searchChannel(id) {
     const channelData = await async_get(id);
-    console.log(id);
 
-    if (channelData == null) {
+    if (channelData !== "e") {
         return {
             statusCode: 200,
             ok: true,
@@ -70,8 +70,9 @@ async function searchChannel(id) {
  */
 async function deleteChannel(id) {
     const channelData = await async_get(id);
+    console.log(channelData);
 
-    if (channelData !== null) {
+    if (channelData === "e") {
         redisClient.del(id);
         kinesis.deleteChannel(id);
         return {
