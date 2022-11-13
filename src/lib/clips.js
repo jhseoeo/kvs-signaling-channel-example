@@ -1,20 +1,15 @@
 const S3 = require("../util/s3");
 const { Clip } = require("../models");
 
-const CLIP_EXPIRES = 14;
-
 /**
  *
  * @param {string} userid
  * @returns
  */
-async function getClipsList(userid) {
-    const clips = await Clip.fildAll({
+async function getClipsList(recordid) {
+    const clips = await Clip.findAll({
         where: {
-            userId: userid,
-            recorded_at: {
-                lt: new Date(Date.now() - 86400000 * CLIP_EXPIRES),
-            },
+            recordid: recordid,
         },
         order: [["clipId", "DSEC"]],
     });
@@ -33,12 +28,12 @@ async function getClipsList(userid) {
     return {
         statusCode: 200,
         ok: true,
-        message: "a channel is successfully created",
+        message: "video clips lists",
         videoDatas,
     };
 }
 
-async function uploadClip(userid) {
+async function getUploadClipUrl(userid, recordid) {
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
@@ -47,22 +42,24 @@ async function uploadClip(userid) {
     const minute = now.getMinutes();
     const second = now.getSeconds();
 
-    const clipName = `${userid}/
+    const clipName = `${userid}/${recordid}/
         ${year}-
         ${month >= 10 ? month : "0" + month}-
         ${date >= 10 ? date : "0" + date}-
         ${hour}:${minute}:${second}`;
 
-    await Clip.create({
-        userid,
-        s3path: clipName,
-        recorded_at: now,
-    });
-
-    return S3.getUploadFileUrl(clipName);
+    return {
+        statusCode: 200,
+        ok: true,
+        message: "upload url",
+        url: await S3.getUploadFileUrl(clipName),
+    };
 }
+
+async function finishUploadClip() {}
 
 module.exports = {
     getClipsList,
-    uploadClip,
+    getUploadClipUrl,
+    finishUploadClip,
 };

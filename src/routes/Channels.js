@@ -30,7 +30,7 @@ router.get("/", Authorized, async (req, res) => {
 });
 
 /**
- * DELETE /channel/
+ * POST /channel/del
  */
 router.delete("/", Authorized, async (req, res) => {
     try {

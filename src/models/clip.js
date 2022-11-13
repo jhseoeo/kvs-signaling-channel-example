@@ -1,46 +1,40 @@
-const { Sequelize } = require(".");
-
 module.exports = (sequelize, DataTypes) => {
-    const clip = sequelize.define(
-        "clip",
+    const Clip = sequelize.define(
+        "Clip",
         {
-            userid: {
-                type: DataTypes.INTEGER,
-                primaryKey: true,
-                references: {
-                    model: "users",
-                    key: "id",
-                },
-            },
             clipid: {
                 type: DataTypes.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,
             },
+            recordid: {
+                type: DataTypes.INTEGER,
+                references: {
+                    model: "Record",
+                    key: "recordid",
+                },
+            },
             s3path: {
                 type: DataTypes.STRING(60),
                 allowNull: false,
-            },
-            recorded_at: {
-                type: DataTypes.DATE,
-                allowNull: false,
-                defaultValue: DataTypes.NOW,
             },
         },
         {
             charset: "utf8", // 한국어 설정
             collate: "utf8_general_ci", // 한국어 설정
             tableName: "clips", // 테이블 이름
-            timestamps: false,
+            timestamps: true,
         }
     );
 
-    clip.associate = function (models) {
-        clip.belongsTo(models.user, {
-            foreignKey: "userid",
-            sourceKey: "id",
+    Clip.associate = function (models) {
+        Clip.belongsTo(models.Record, {
+            foreignKey: "recordid",
+            sourceKey: "recordid",
             onDelete: "cascade",
             onUpdate: "cascade",
         });
     };
+
+    return Clip;
 };

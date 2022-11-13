@@ -17,5 +17,6 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 db.User = require("./user")(sequelize, Sequelize);
 db.Clip = require("./clip")(sequelize, Sequelize);
+db.Record = require("./record")(sequelize, Sequelize);
 
 module.exports = db;

@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-    const user = sequelize.define(
-        "user",
+    const User = sequelize.define(
+        "User",
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -29,8 +29,8 @@ module.exports = (sequelize, DataTypes) => {
         }
     );
 
-    user.associate = function (models) {
-        user.hasMany(models.clip, {
+    User.associate = function (models) {
+        User.hasMany(models.Clip, {
             foreignKey: "userid",
             sourceKey: "id",
             onDelete: "cascade",
@@ -38,5 +38,5 @@ module.exports = (sequelize, DataTypes) => {
         });
     };
 
-    return user;
+    return User;
 };

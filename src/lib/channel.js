@@ -1,7 +1,7 @@
 const kinesis = require("../util/kinesis");
 const { promisify } = require("util");
 const redisClient = require("../util/redis_channel");
-const { channel } = require("diagnostics_channel");
+const { startRecord, stopRecord } = require("./records");
 
 const async_get = promisify(redisClient.get).bind(redisClient);
 
@@ -11,12 +11,18 @@ const async_get = promisify(redisClient.get).bind(redisClient);
  * @return {{statusCode: int, ok: boolean, message: string, createdChannelData?: object}} result of creating channel
  */
 async function createChannel(id) {
-    const channelData = await async_get(id);
-
-    if (channelData !== "e") {
+    const recordid = await async_get(id);
+    if (typeof recordid === "string" && /^\d+$/.test(recordid)) {
+        return {
+            statusCode: 400,
+            ok: false,
+            message: "a channel is already exists",
+        };
+    } else {
         try {
             const channelData = await kinesis.createChannel(id, "MASTER");
-            redisClient.set(id, "e");
+            const recordid = await startRecord(id);
+            redisClient.set(id, recordid);
             return {
                 statusCode: 200,
                 ok: true,
@@ -27,15 +33,9 @@ async function createChannel(id) {
             return {
                 statusCode: 500,
                 ok: false,
-                message: "internal server error",
+                message: `internal server error - ${e}`,
             };
         }
-    } else {
-        return {
-            statusCode: 400,
-            ok: false,
-            message: "a channel is already exists",
-        };
     }
 }
 
@@ -45,20 +45,20 @@ async function createChannel(id) {
  * @return {{statusCode: int, ok: boolean, message: string, channelData?: object}} result of existing channel
  */
 async function searchChannel(id) {
-    const channelData = await async_get(id);
+    const recordid = await async_get(id);
 
-    if (channelData !== "e") {
-        return {
-            statusCode: 200,
-            ok: true,
-            message: "a channel is not created",
-        };
-    } else {
+    if (typeof recordid === "string" && /^\d+$/.test(recordid)) {
         return {
             statusCode: 200,
             ok: true,
             message: "a connection is created",
             channelData: await kinesis.getChannelInfo(id, "VIEWER", "client"),
+        };
+    } else {
+        return {
+            statusCode: 200,
+            ok: true,
+            message: "a channel is not created",
         };
     }
 }
@@ -69,12 +69,12 @@ async function searchChannel(id) {
  * @return {{statusCode: int, ok: boolean, message: string}} result of deleting channel
  */
 async function deleteChannel(id) {
-    const channelData = await async_get(id);
-    console.log(channelData);
+    const recordid = await async_get(id);
 
-    if (channelData === "e") {
+    if (typeof recordid === "string" && /^\d+$/.test(recordid)) {
         redisClient.del(id);
         kinesis.deleteChannel(id);
+        stopRecord(recordid);
         return {
             statusCode: 200,
             ok: true,

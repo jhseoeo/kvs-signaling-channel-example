@@ -1,7 +1,7 @@
 const AWS = require("aws-sdk");
 require("dotenv").config();
 
-const S3BUCKET = "dogibogi-laptop";
+const S3BUCKET = process.env.S3_BUCKET;
 const S3OPTION = {
     region: process.env.S3_REGION,
     accessKeyId: process.env.S3_ACCESS_KEY_ID,
@@ -47,8 +47,31 @@ async function deleteFile(fileKey) {
     return S3.deleteObject(params).promise();
 }
 
+async function checkFileExists(fileKey) {
+    return new Promise(
+        (resolve,
+        (reject) => {
+            S3.headObject({
+                Bucket: S3BUCKET,
+                Key: fileKey,
+            })
+                .promise()
+                .then(
+                    () => {
+                        resolve(true);
+                    },
+                    (err) => {
+                        if (err.code === "NotFound") resolve(false);
+                        else reject(err);
+                    }
+                );
+        })
+    );
+}
+
 module.exports = {
     getUploadFileUrl,
     getDownloadFileUrl,
     deleteFile,
+    checkFileExists,
 };

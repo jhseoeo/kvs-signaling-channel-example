@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 
 const WebRTCChannelRouter = require("./routes/Channels");
 const AuthenticateRouter = require("./routes/Auth");
+const ClipsRouter = require("./routes/Clips");
 require("./models").sequelize.sync();
 require("dotenv").config();
 
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 
 app.use("/channel", WebRTCChannelRouter);
 app.use("/auth", AuthenticateRouter);
+app.use("/clips", ClipsRouter);
 
 const server = https.createServer(options, app);
 
