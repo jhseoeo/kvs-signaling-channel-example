@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import { useBeforeunload } from "react-beforeunload";
 import "./player.css";
 import Header from "../header";
 const getSignalingChannelInfo = require("../../lib/kinesis/getChannelInfo");
@@ -11,17 +12,28 @@ const startViewer = require("../../lib/kinesis/viewer");
  */
 function Viewer() {
     const viewerRemoteView = useRef();
+    const closeFunc = useRef();
+
+    const onConnectionTerminated = () => {
+        window.location.href = "/";
+    };
+
+    useBeforeunload((e) => {
+        if (closeFunc.current) closeFunc.current();
+    });
 
     useEffect(() => {
         getSignalingChannelInfo()
             .then((channelData) => {
-                startViewer(channelData.channelData, viewerRemoteView.current, () => {});
+                return startViewer(channelData.channelData, viewerRemoteView.current, () => {}, onConnectionTerminated);
+            })
+            .then((close) => {
+                closeFunc.current = close;
             })
             .catch((e) => {
                 console.log(e);
             });
 
-        // return () => {deleteSignalingChannel(channelName)};
         // eslint-disable-next-line
     }, []);
 

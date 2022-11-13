@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { useRef, useEffect } from "react";
+import { useBeforeunload } from "react-beforeunload";
 import "./player.css";
 const createSignalingChannel = require("../../lib/kinesis/createChannel");
 const deleteSignalingChannel = require("../../lib/kinesis/deleteChannel");
@@ -13,8 +13,14 @@ const startMaster = require("../../lib/kinesis/master");
 function Master() {
     const masterLocalView = useRef();
     const localStream = useRef();
+    const closeFunc = useRef();
 
-    useState(() => {}, []);
+    useBeforeunload((e) => {
+        e.preventDefault();
+        deleteSignalingChannel();
+        if (closeFunc.current) closeFunc.current();
+        window.close();
+    });
 
     useEffect(() => {
         const makeLocalStream = async () => {
@@ -28,25 +34,24 @@ function Master() {
                 console.error("[MASTER] Could not find webcam");
             }
 
-            createSignalingChannel()
+            await createSignalingChannel()
                 .then((channelData) => {
-                    startMaster(channelData.channelData, localStream.current, () => {});
+                    return startMaster(channelData.channelData, localStream.current, () => {});
+                })
+                .then((close) => {
+                    closeFunc.current = close;
                 })
                 .catch((e) => {
                     console.log(e);
                 });
         };
         makeLocalStream();
-        window.onbeforeunload = () => {
-            deleteSignalingChannel();
-        };
         // eslint-disable-next-line
     }, []);
 
     return (
         <>
             <video className="viewer-local-view" autoPlay playsInline controls muted ref={masterLocalView} />
-            <button>close channel</button>
         </>
     );
 }
