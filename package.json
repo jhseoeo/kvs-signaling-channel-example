@@ -18,6 +18,7 @@
         "react-cookie": "^4.1.1",
         "react-custom-alert": "^1.0.3",
         "react-dom": "^18.2.0",
+        "react-icons": "^4.6.0",
         "react-router-dom": "^6.4.0",
         "react-scripts": "^5.0.1",
         "reactjs-alert": "^2.2.0",
