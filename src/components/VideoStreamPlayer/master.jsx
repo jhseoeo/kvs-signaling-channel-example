@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useRef, useEffect } from "react";
 import "./player.css";
+import Header from "../header"
 const createSignalingChannel = require("../../lib/kinesis/createChannel");
 const deleteSignalingChannel = require("../../lib/kinesis/deleteChannel");
 const startMaster = require("../../lib/kinesis/master");
@@ -45,6 +46,7 @@ function Master() {
 
     return (
         <>
+            <Header/>
             <video className="viewer-local-view" autoPlay playsInline controls muted ref={masterLocalView} />
             <button>close channel</button>
         </>

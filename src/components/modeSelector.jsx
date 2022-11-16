@@ -47,7 +47,7 @@ function ModeSelector(props) {
                         </Button>
                         
                         <Button style={cardStyle} href="/master">
-                            <TbVideo style={iconStyle} /><br/>웹캠으로 설정하기
+                            <TbVideo style={iconStyle} /><br/>웹캠 설정하기
                         </Button>
 
                         <Button style={cardStyle} href="/recorder">
