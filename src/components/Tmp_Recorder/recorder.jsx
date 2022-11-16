@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
-import RecordVideo from "../../lib/recoder/recoder";
-import Header from "../header"
+import RecordVideo from "../../lib/recoder/recodeVideo";
+import startDecideRecordLoop from "../../lib/recoder/decideRecord";
 
 /**
  * Page that produces video stream and transfers to Viewer
@@ -8,13 +8,15 @@ import Header from "../header"
  */
 function Recorder() {
     const recorderView = useRef();
-    let cameraStream = null;
+    const cameraStream = useRef();
 
     useEffect(() => {
         (async () => {
-            cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-            recorderView.current.srcObject = cameraStream;
+            cameraStream.current = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            recorderView.current.srcObject = cameraStream.current;
+            startDecideRecordLoop(cameraStream.currentㅈ);
         })();
+        // eslint-disable-next-line
     }, []);
 
     const downloadFile = (blobFile) => {
@@ -29,10 +31,8 @@ function Recorder() {
 
     return (
         <div>
-            <Header/>
             <video className="recorder-view" autoPlay playsInline controls muted ref={recorderView} />
             <button
-                id="start-record"
                 onClick={async () => {
                     const file = await RecordVideo(cameraStream);
                     downloadFile(file);

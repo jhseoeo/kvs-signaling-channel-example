@@ -17,7 +17,7 @@ class CustomSigner {
  * @param {function(string)} onStatsReport - callback function to inform current stat of webrtc connection
  * @return {function():void} close function that sends connection termination signal to another peer
  */
-async function startViewer(kinesisInfo, remoteView, pollConnection) {
+async function startViewer(kinesisInfo, remoteView, pollConnection, onConnectionEnd) {
     const role = "VIEWER";
     this.clientId = "strong";
 
@@ -39,6 +39,14 @@ async function startViewer(kinesisInfo, remoteView, pollConnection) {
 
     this.peerConnection = new RTCPeerConnection(configuration);
     this.peerConnectionStatsInterval = setInterval(() => this.peerConnection.getStats().then(pollConnection), 1000);
+
+    this.dataChannel = this.peerConnection.createDataChannel("kvsDataChannel");
+    this.peerConnection.ondatachannel = (e) => {
+        e.channel.onmessage = (msg) => {
+            if (msg.data === "done") onConnectionEnd();
+        };
+        this.dataChannel.send("open");
+    };
 
     this.signalingClient.on("open", async () => {
         console.log("[VIEWER] Connected to signaling service");
@@ -124,8 +132,10 @@ async function startViewer(kinesisInfo, remoteView, pollConnection) {
     console.log("[VIEWER] Starting viewer connection");
     this.signalingClient.open();
 
-    // close function that sends connection termination signal to another peer
-    return () => {};
+    // close function that sends connection termination signal to master
+    return () => {
+        this.dataChannel.send("close");
+    };
 }
 
 module.exports = startViewer;

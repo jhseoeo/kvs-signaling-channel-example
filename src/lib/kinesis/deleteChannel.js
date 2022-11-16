@@ -2,10 +2,14 @@ const { getCookie } = require("../cookie");
 
 /**
  * Delete WebRTC Signaling Channel
- * @param {string} channelName - Name of the signaling channel
+ * @returns {Promise<Response>} - Request status of deleting channel
  */
 async function deleteSignalingChannel() {
-    await fetch(process.env.REACT_APP_PROXY_HOST + "/channel", {
+    // var blob = new Blob([]);
+
+    // navigator.sendBeacon();
+
+    return await fetch(process.env.REACT_APP_PROXY_HOST + "/channel", {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
@@ -13,9 +17,8 @@ async function deleteSignalingChannel() {
             refresh: getCookie("refresh"),
         },
         body: null,
+        keepalive: true,
     }).then((res) => res.json());
-
-    alert("채널 삭제 성공!");
 }
 
 module.exports = deleteSignalingChannel;

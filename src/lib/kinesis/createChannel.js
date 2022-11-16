@@ -2,7 +2,6 @@ const { getCookie } = require("../cookie");
 
 /**
  * Create WebRTC Signaling Channel and get info about the channel
- * @param {string} channelName - Name of the signaling channel
  * @returns {Promise<Response>} - Info about Channel
  */
 async function createSignalingChannel() {
