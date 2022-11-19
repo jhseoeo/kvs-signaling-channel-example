@@ -43,15 +43,15 @@ function ModeSelector(props) {
                 <Container style={containerStyle}>
                     <Row>
                         <Button style={cardStyle} href="/viewer">
-                        <MdOndemandVideo style={iconStyle}/><br/>실시간 영상 시청하기
+                        <MdOndemandVideo style={iconStyle}/><br/>실시간 영상 시청
                         </Button>
                         
                         <Button style={cardStyle} href="/master">
-                            <TbVideo style={iconStyle} /><br/>웹캠 설정하기
+                            <TbVideo style={iconStyle} /><br/>웹캠 등록
                         </Button>
 
                         <Button style={cardStyle} href="/recorder">
-                            <FaPhotoVideo style={iconStyle} /><br/>녹화영상 확인하기
+                            <FaPhotoVideo style={iconStyle} /><br/>녹화영상
                         </Button>
                 </Row>
             </Container>

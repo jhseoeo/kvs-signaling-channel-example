@@ -109,7 +109,7 @@ function Header(props) {
                     실시간 영상 시청
                 </a>
                 <a id="webcam" className="menu-item" href="/master">
-                    웹캠으로 설정
+                    웹캠 등록
                 </a>
                 <a id="recoder" className="menu-item" href="/recorder">
                     녹화영상 확인

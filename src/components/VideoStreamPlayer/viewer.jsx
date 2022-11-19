@@ -1,7 +1,11 @@
 import { useRef, useEffect } from "react";
 import { useBeforeunload } from "react-beforeunload";
 import "./player.css";
+import React from 'react';
+import Button from 'react-bootstrap/Button';
 import Header from "../header";
+import Modal from "../modal"
+
 const getSignalingChannelInfo = require("../../lib/kinesis/getChannelInfo");
 const startViewer = require("../../lib/kinesis/viewer");
 
@@ -13,6 +17,8 @@ const startViewer = require("../../lib/kinesis/viewer");
 function Viewer() {
     const viewerRemoteView = useRef();
     const closeFunc = useRef();
+
+    const [modalIsOpen, setIsOpen] = React.useState(false);
 
     const onConnectionTerminated = () => {
         window.location.href = "/";
@@ -37,17 +43,24 @@ function Viewer() {
         // eslint-disable-next-line
     }, []);
 
+    const style = {
+        buttonStyle: {
+            position: 'absolute',
+            right: '10%',
+            top: '78%',
+        }
+    }
+
     return (
         <>
             <Header />
-            {/* <br/> */}
-            {/* <div style={{
-                position:"absolute",
-                right:"85%",
-                top:"13%"
-            }}>wefwfe</div> */}
+            <Modal
+                isShow={modalIsOpen}
+                closeCallback={() => setIsOpen(false)}
+            />
+
             <video className="viewer-remote-view" autoPlay playsInline controls muted ref={viewerRemoteView} />
-            {/* <button>close channel</button> */}
+            <Button style={style.buttonStyle} onClick={() => { setIsOpen(true) }}>?</Button>
         </>
     );
 }
