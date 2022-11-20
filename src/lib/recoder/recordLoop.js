@@ -25,7 +25,7 @@ async function startDecideRecordLoop(cameraStream, recordCallback, isStreaming) 
     let prevImgBlob = await imageCapture.grabFrame().then((imgbmp) => imageBitmapToBlob(imgbmp));
     while (true) {
         if (!imageCapture) continue;
-        else if (isStreaming()) continue; // when streaming,
+        else if (isStreaming()) continue; // when streaming, pause recording
 
         const imageBlob = await imageCapture.grabFrame().then((imgbmp) => imageBitmapToBlob(imgbmp));
         // compare current frame with previous frame
@@ -34,20 +34,19 @@ async function startDecideRecordLoop(cameraStream, recordCallback, isStreaming) 
 
         if (compThreshold < compareResult && compareResult < getValidThreshold(compThreshold)) {
             const detectResult = await detect(imageBlob);
-            console.log(compareResult, compThreshold, detectResult);
+            // console.log(compareResult, compThreshold, detectResult);
 
             // successfully detected
-            // if (detectResult in DETECTABLE_OBJECTS) {
-            if (true) {
+            if (detectResult in DETECTABLE_OBJECTS) {
                 logicInterval = getNewInterval(logicInterval, matchRateDelta, true);
                 compThreshold = getNewThreshold(compThreshold, matchRateDelta, true);
-                // recordCallback();
-                // await sleep(RECORD_STOP_LOOP);
+                recordCallback();
+                await sleep(RECORD_STOP_LOOP);
                 continue;
             }
         }
 
-        console.log(compareResult, compThreshold, matchRateDelta);
+        // console.log(compareResult, compThreshold, matchRateDelta);
         logicInterval = getNewInterval(logicInterval, matchRateDelta, false);
         compThreshold = getNewThreshold(compThreshold, matchRateDelta, false);
         prevImgBlob = imageBlob;
