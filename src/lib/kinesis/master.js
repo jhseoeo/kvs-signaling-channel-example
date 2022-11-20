@@ -15,9 +15,10 @@ class CustomSigner {
  * @param {object} kinesisInfo - Information about KInesis
  * @param {HTMLVideoElement} localView - HTML Video Player that displays Webcam view of master
  * @param {function(string)} onStatsReport - callback function to inform current stat of webrtc connection
- * @return {function():void} close function that sends connection termination signal to another peer
+ * @param {function(boolean)} onConnectionStatChange -
+ * @return {function()} close function that sends connection termination signal to another peer
  */
-async function startMaster(kinesisInfo, localStream, onStatsReport) {
+async function startMaster(kinesisInfo, localStream, onStatsReport, onConnectionStatChange) {
     const role = "MASTER";
     this.clientId = null;
     this.role = role;
@@ -49,7 +50,11 @@ async function startMaster(kinesisInfo, localStream, onStatsReport) {
         this.dataChannel = this.peerConnection.createDataChannel("kvsDataChannel");
         this.peerConnection.ondatachannel = (e) => {
             e.channel.onmessage = (msg) => {
-                console.log(msg.data);
+                if (msg.data === "open") {
+                    onConnectionStatChange(true);
+                } else if (msg.data === "close") {
+                    onConnectionStatChange(false);
+                }
             };
         };
 
