@@ -5,16 +5,18 @@ const cocossd = require("@tensorflow-models/coco-ssd");
 
 let model = null;
 
+/**
+ * Setup cocossd model
+ */
 const setupCoco = async () => {
     model = await cocossd.load();
     console.log("finish loading cocossd");
 };
-setupCoco();
 
 /**
- *
+ * detect
  * @param {blob} imageblob
- * @return {any} 일단 아무거나 리턴
+ * @return {any} Objects that detected in screenshot
  */
 const detect = async (imageblob) => {
     if (model) {
@@ -28,4 +30,4 @@ const detect = async (imageblob) => {
     }
 };
 
-module.exports = detect;
+module.exports = { detect, setupCoco };
