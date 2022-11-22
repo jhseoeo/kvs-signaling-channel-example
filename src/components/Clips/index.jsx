@@ -1,5 +1,6 @@
 import getRecordsList from "../../lib/clips/getRecordsList";
 import uploadClip from "../../lib/clips/uploadClip";
+import getClips from "../../lib/clips/getClips";
 
 function Clips(props) {
     return (
@@ -11,7 +12,13 @@ function Clips(props) {
             >
                 getRecordsList
             </button>
-            <button>getClips</button>
+            <button
+                onClick={() => {
+                    getClips().then((x) => console.log(x));
+                }}
+            >
+                getClips
+            </button>
             <input
                 type="file"
                 onChange={(e) => {

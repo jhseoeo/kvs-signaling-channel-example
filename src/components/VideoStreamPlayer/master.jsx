@@ -20,6 +20,7 @@ function Master() {
     const flag = "master"
 
     const [modalIsOpen, setIsOpen] = React.useState(false);
+    const connectionState = useRef(false);
 
     useBeforeunload((e) => {
         e.preventDefault();
@@ -42,7 +43,14 @@ function Master() {
 
             await createSignalingChannel()
                 .then((channelData) => {
-                    return startMaster(channelData.channelData, localStream.current, () => {});
+                    return startMaster(
+                        channelData.channelData,
+                        localStream.current,
+                        () => {},
+                        (connect) => {
+                            connectionState.current = connect;
+                        }
+                    );
                 })
                 .then((close) => {
                     closeFunc.current = close;

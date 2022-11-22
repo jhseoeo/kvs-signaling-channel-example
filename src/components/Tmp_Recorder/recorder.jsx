@@ -4,6 +4,8 @@ import Modal from "../modal"
 import Header from "../header";
 import React from 'react';
 import startDecideRecordLoop from "../../lib/recoder/decideRecord";
+import uploadClip from "../../lib/clips/uploadClip";
+const { RecordVideo, startDecideRecordLoop } = require("../../lib/recoder");
 
 /**
  * Page that produces video stream and transfers to Viewer
@@ -20,7 +22,16 @@ function Recorder() {
         (async () => {
             cameraStream.current = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
             recorderView.current.srcObject = cameraStream.current;
-            startDecideRecordLoop(cameraStream.currentㅈ);
+            startDecideRecordLoop(
+                cameraStream.current,
+                async () => {
+                    const file = await RecordVideo(cameraStream.current, 5 * 1000);
+                    downloadFile(file);
+                },
+                () => {
+                    return false;
+                }
+            );
         })();
         // eslint-disable-next-line
     }, []);
@@ -46,7 +57,7 @@ function Recorder() {
             <video className="recorder-view" autoPlay playsInline controls muted ref={recorderView} />
             <button
                 onClick={async () => {
-                    const file = await RecordVideo(cameraStream);
+                    const file = await RecordVideo(cameraStream.current, 5 * 1000);
                     downloadFile(file);
                 }}
             >
