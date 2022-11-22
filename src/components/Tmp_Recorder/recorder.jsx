@@ -1,5 +1,8 @@
 import { useRef, useEffect } from "react";
 import RecordVideo from "../../lib/recoder/recodeVideo";
+import Modal from "../modal"
+import Header from "../header";
+import React from 'react';
 import startDecideRecordLoop from "../../lib/recoder/decideRecord";
 
 /**
@@ -9,6 +12,9 @@ import startDecideRecordLoop from "../../lib/recoder/decideRecord";
 function Recorder() {
     const recorderView = useRef();
     const cameraStream = useRef();
+    const flag = "recorder"
+
+    const [modalIsOpen, setIsOpen] = React.useState(false);
 
     useEffect(() => {
         (async () => {
@@ -31,6 +37,12 @@ function Recorder() {
 
     return (
         <div>
+            <Header />
+            <Modal
+                flag={flag}
+                isShow={modalIsOpen}
+                closeCallback={() => setIsOpen(false)}
+            />
             <video className="recorder-view" autoPlay playsInline controls muted ref={recorderView} />
             <button
                 onClick={async () => {

@@ -1,4 +1,4 @@
-
+import CloseButton from 'react-bootstrap/CloseButton';
 import Modal from 'react-bootstrap/Modal';
 import Carousel from 'react-bootstrap/Carousel';
 import { useState, useEffect } from "react";
@@ -14,7 +14,7 @@ export default function MyVerticallyCenteredModal(props) {
 
     
     const [showModal, setShowModal] = useState(false);
-    const VISITED = localStorage.getItem('visited');
+    const VISITED = localStorage.getItem(`visited_${props.flag}`);
 
     const handleClose = () => {
         setShowModal(false)
@@ -29,7 +29,8 @@ export default function MyVerticallyCenteredModal(props) {
 
             if (!VISITED) {
                 setShowModal(true);
-                localStorage.setItem('visited', NaN);
+                console.log(`props.key ${props.flag} ${props.isShow}`)
+                localStorage.setItem(`visited_${props.flag}`, NaN);
             }
         };
 

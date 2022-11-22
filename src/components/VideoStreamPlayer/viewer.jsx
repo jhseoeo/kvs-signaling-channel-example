@@ -2,9 +2,10 @@ import { useRef, useEffect } from "react";
 import { useBeforeunload } from "react-beforeunload";
 import "./player.css";
 import React from 'react';
-import Button from 'react-bootstrap/Button';
 import Header from "../header";
 import Modal from "../modal"
+import IconButton from '@mui/material/IconButton';
+import HelpOutlineTwoToneIcon from '@mui/icons-material/HelpOutlineTwoTone';
 
 const getSignalingChannelInfo = require("../../lib/kinesis/getChannelInfo");
 const startViewer = require("../../lib/kinesis/viewer");
@@ -17,6 +18,28 @@ const startViewer = require("../../lib/kinesis/viewer");
 function Viewer() {
     const viewerRemoteView = useRef();
     const closeFunc = useRef();
+    const flag = "viewer"
+
+    const dtoList = [
+        {
+            title : "fwoeifj",
+            contentTitle: "foweijf",
+            mainContent: "foweijfoi",
+            img: "foweijf"
+        },
+        {
+            title : "fwoeifj",
+            contentTitle: "foweijf",
+            mainContent: "foweijfoi",
+            img: "foweijf"
+        },
+        {
+            title : "fwoeifj",
+            contentTitle: "foweijf",
+            mainContent: "foweijfoi",
+            img: "foweijf"
+        }
+    ]
 
     const [modalIsOpen, setIsOpen] = React.useState(false);
 
@@ -47,7 +70,7 @@ function Viewer() {
         buttonStyle: {
             position: 'absolute',
             right: '10%',
-            top: '78%',
+            top: '10%',
         }
     }
 
@@ -55,12 +78,16 @@ function Viewer() {
         <>
             <Header />
             <Modal
+                flag={flag}
                 isShow={modalIsOpen}
                 closeCallback={() => setIsOpen(false)}
+                
             />
 
             <video className="viewer-remote-view" autoPlay playsInline controls muted ref={viewerRemoteView} />
-            <Button style={style.buttonStyle} onClick={() => { setIsOpen(true) }}>?</Button>
+            <IconButton aria-label="delete" size="large" color="primary" style={style.buttonStyle} onClick={() => setIsOpen(true)}>
+                <HelpOutlineTwoToneIcon fontSize="inherit"/>
+            </IconButton>
         </>
     );
 }

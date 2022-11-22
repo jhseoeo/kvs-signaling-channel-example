@@ -8,6 +8,7 @@ import Recoder from "./components/Tmp_Recorder/recorder";
 import ModeSelector from "./components/modeSelector";
 import Home from "./components/home";
 import Clip from "./components/Clips";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
     return (

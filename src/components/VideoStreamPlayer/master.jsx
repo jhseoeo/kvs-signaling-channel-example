@@ -1,7 +1,9 @@
 import { useRef, useEffect } from "react";
 import { useBeforeunload } from "react-beforeunload";
 import "./player.css";
+import React from 'react';
 import Header from "../header"
+import Modal from "../modal"
 const createSignalingChannel = require("../../lib/kinesis/createChannel");
 const deleteSignalingChannel = require("../../lib/kinesis/deleteChannel");
 const startMaster = require("../../lib/kinesis/master");
@@ -15,6 +17,9 @@ function Master() {
     const masterLocalView = useRef();
     const localStream = useRef();
     const closeFunc = useRef();
+    const flag = "master"
+
+    const [modalIsOpen, setIsOpen] = React.useState(false);
 
     useBeforeunload((e) => {
         e.preventDefault();
@@ -53,6 +58,11 @@ function Master() {
     return (
         <>
             <Header/>
+            <Modal
+                flag={flag}
+                isShow={modalIsOpen}
+                closeCallback={() => setIsOpen(false)}
+            />
             <video className="viewer-local-view" autoPlay playsInline controls muted ref={masterLocalView} />
         </>
     );
