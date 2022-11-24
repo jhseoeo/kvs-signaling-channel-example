@@ -5,7 +5,7 @@ const S3BUCKET = process.env.S3_BUCKET;
 const S3OPTION = {
     region: process.env.S3_REGION,
     accessKeyId: process.env.S3_ACCESS_KEY_ID,
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    secretAccessKey: process.env.S3SECRET_ACCESS_KEY,
     signatureVersion: "v4",
 };
 
@@ -15,6 +15,7 @@ async function getSignedUrl(fileKey, action) {
     const params = {
         Bucket: S3BUCKET,
         Key: fileKey,
+        Expires: 3600,
     };
 
     return await S3.getSignedUrlPromise(action, params);
@@ -47,31 +48,8 @@ async function deleteFile(fileKey) {
     return S3.deleteObject(params).promise();
 }
 
-async function checkFileExists(fileKey) {
-    return new Promise(
-        (resolve,
-        (reject) => {
-            S3.headObject({
-                Bucket: S3BUCKET,
-                Key: fileKey,
-            })
-                .promise()
-                .then(
-                    () => {
-                        resolve(true);
-                    },
-                    (err) => {
-                        if (err.code === "NotFound") resolve(false);
-                        else reject(err);
-                    }
-                );
-        })
-    );
-}
-
 module.exports = {
     getUploadFileUrl,
     getDownloadFileUrl,
     deleteFile,
-    checkFileExists,
 };

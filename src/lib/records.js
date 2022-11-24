@@ -63,7 +63,49 @@ async function getRecords(userid) {
         }
     } else {
         return {
-            statusCode: 400,
+            statusCode: 403,
+            ok: false,
+            message: `invalid userid - ${userid}`,
+        };
+    }
+}
+
+async function deleteRecord(userid, recordid) {
+    if (typeof userid === "number") {
+        try {
+            const record = await Record.findOne({ where: { recordid } });
+            if (!record) {
+                return {
+                    statusCode: 404,
+                    ok: false,
+                    message: `no record exists`,
+                };
+            } else if (record.userid !== userid) {
+                return {
+                    statusCode: 403,
+                    ok: false,
+                    message: `cannot delete other user's record`,
+                };
+            } else {
+                // add s3 delete record folder
+
+                await record.destroy();
+                return {
+                    statusCode: 200,
+                    ok: true,
+                    message: `successfully deleted`,
+                };
+            }
+        } catch (e) {
+            return {
+                statusCode: 500,
+                ok: false,
+                message: `internal server error - ${e}`,
+            };
+        }
+    } else {
+        return {
+            statusCode: 500,
             ok: false,
             message: `invalid userid - ${userid}`,
         };
@@ -75,4 +117,5 @@ module.exports = {
     stopRecord,
     getCurrentRecordId,
     getRecords,
+    deleteRecord,
 };

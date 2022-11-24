@@ -29,14 +29,5 @@ module.exports = (sequelize, DataTypes) => {
         }
     );
 
-    User.associate = function (models) {
-        User.hasMany(models.Clip, {
-            foreignKey: "userid",
-            sourceKey: "id",
-            onDelete: "cascade",
-            onUpdate: "cascade",
-        });
-    };
-
     return User;
 };

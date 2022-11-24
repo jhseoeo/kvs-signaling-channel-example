@@ -4,7 +4,7 @@ const { Authorized } = require("../middlewares/authorized");
 const router = express.Router();
 
 /**
- * POST /channel/
+ * POST /channel - Create new channel
  */
 router.post("/", Authorized, async (req, res) => {
     try {
@@ -17,7 +17,7 @@ router.post("/", Authorized, async (req, res) => {
 });
 
 /**
- * GET /channel/
+ * GET /channel - Get currently opened channel
  */
 router.get("/", Authorized, async (req, res) => {
     try {
@@ -30,7 +30,7 @@ router.get("/", Authorized, async (req, res) => {
 });
 
 /**
- * POST /channel/del
+ * POST /channel - Delete currently opened channel
  */
 router.delete("/", Authorized, async (req, res) => {
     try {
