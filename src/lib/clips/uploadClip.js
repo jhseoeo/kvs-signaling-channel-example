@@ -1,8 +1,5 @@
 const { getCookie } = require("../cookie");
 
-/**
- * Delete WebRTC Signaling Channel
- */
 async function uploadClip(file) {
     return new Promise(async (resolve, reject) => {
         // First, get signed url for upload file
@@ -21,11 +18,9 @@ async function uploadClip(file) {
             });
 
         // Second, upload file to signeds url
-        const form = new FormData();
-        form.append("uploadedFile", file, file.name);
-
         const request = new XMLHttpRequest();
         request.open("PUT", url);
+        request.setRequestHeader("Content-Type", "video/webm");
 
         request.addEventListener("load", () => {
             // Third, invoke confirm call
@@ -48,7 +43,7 @@ async function uploadClip(file) {
             }
         });
 
-        request.send(form);
+        request.send(file);
     });
 }
 

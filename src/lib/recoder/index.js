@@ -1,4 +1,4 @@
-const RecordVideo = require("./recodeVideo");
+const RecordVideo = require("./recordVideo");
 const startDecideRecordLoop = require("./recordLoop");
 
 module.exports = {
