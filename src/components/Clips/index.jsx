@@ -1,15 +1,21 @@
 import { useRef } from "react";
-import getRecordsList from "../../lib/clips/getRecordsList";
-import deleteRecord from "../../lib/clips/deleteRecord";
-import uploadClip from "../../lib/clips/uploadClip";
-import getClips from "../../lib/clips/getClips";
-import setClipTag from "../../lib/clips/setClipTag";
-import searchClipByTag from "../../lib/clips/searchClipByTag";
-import deleteClip from "../../lib/clips/deleteClip";
+import {
+    getRecordsList,
+    deleteRecord,
+    uploadClip,
+    getClips,
+    getClip,
+    setClipTag,
+    searchClipByTag,
+    deleteClip,
+} from "../../lib/clips";
 
 function Clips(props) {
     const getClips_recordid = useRef();
     const deleteRecord_recordid = useRef();
+
+    const getClip_recordid = useRef();
+    const getClip_clipid = useRef();
 
     const setClipTag_recordid = useRef();
     const setClipTag_clipid = useRef();
@@ -69,7 +75,22 @@ function Clips(props) {
             </div>
             <br />
             <div>
-                upload clips&nbsp;
+                get clip&nbsp;
+                <input style={{ border: "1px solid black" }} ref={getClip_recordid} placeholder="recordid" />
+                <input style={{ border: "1px solid black" }} ref={getClip_clipid} placeholder="clipid" />
+                <button
+                    onClick={() => {
+                        const recordid = getClip_recordid.current.value;
+                        const clipid = getClip_clipid.current.value;
+                        getClip(recordid, clipid).then((x) => console.log(x));
+                    }}
+                >
+                    getClip
+                </button>
+            </div>
+            <br />
+            <div>
+                upload clips[사용하지 마세요]&nbsp;
                 <input
                     type="file"
                     onChange={(e) => {

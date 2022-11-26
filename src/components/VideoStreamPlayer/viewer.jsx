@@ -60,6 +60,8 @@ function Viewer() {
                 closeFunc.current = close;
             })
             .catch((e) => {
+                alert("설정된 웹캠이 없어용");
+                window.location.href = "/modeselector";
                 console.log(e);
             });
 
