@@ -10,21 +10,19 @@ module.exports = (sequelize, DataTypes) => {
             userid: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                onDelete: "cascade",
                 references: {
                     model: "users",
                     key: "id",
-                    onDelete: "cascade",
-                    onUpdate: "cascade",
                 },
             },
             recordid: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                onDelete: "cascade",
                 references: {
                     model: "records",
                     key: "recordid",
-                    onDelete: "cascade",
-                    onUpdate: "cascade",
                 },
             },
             s3path: {
@@ -43,6 +41,21 @@ module.exports = (sequelize, DataTypes) => {
             timestamps: true,
         }
     );
+
+    Clip.associate = function (models) {
+        Clip.belongsTo(models.User, {
+            foreignKey: "id",
+            sourceKey: "userid",
+            onDelete: "cascade",
+            onUpdate: "cascade",
+        });
+        Clip.belongsTo(models.Record, {
+            foreignKey: "recordid",
+            sourceKey: "recordid",
+            onDelete: "cascade",
+            onUpdate: "cascade",
+        });
+    };
 
     return Clip;
 };

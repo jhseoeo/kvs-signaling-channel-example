@@ -9,11 +9,10 @@ module.exports = (sequelize, DataTypes) => {
             },
             userid: {
                 type: DataTypes.INTEGER,
+                onDelete: "cascade",
                 references: {
                     model: "users",
                     key: "id",
-                    onDelete: "cascade",
-                    onUpdate: "cascade",
                 },
             },
             record_start: {
@@ -32,6 +31,19 @@ module.exports = (sequelize, DataTypes) => {
             timestamps: false,
         }
     );
+
+    Record.associate = function (models) {
+        Record.belongsTo(models.User, {
+            foreignKey: "userid",
+            sourceKey: "id",
+            onDelete: "cascade",
+            onUpdate: "cascade",
+        });
+        Record.hasMany(models.Clip, {
+            foreignKey: "recordid",
+            sourceKey: "recordid",
+        });
+    };
 
     return Record;
 };

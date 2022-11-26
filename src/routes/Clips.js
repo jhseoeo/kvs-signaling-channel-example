@@ -4,6 +4,7 @@ const {
     getClipsList,
     getUploadClipUrl,
     confirmUploadClip,
+    getClip,
     setClipTag,
     searchClipByTag,
     deleteClip,
@@ -50,7 +51,6 @@ router.post("/", Authorized, async (req, res) => {
 /**
  * POST /clips/confirm - Confirm upload for clip
  */
-
 router.post("/confirm", Authorized, async (req, res) => {
     const { filename } = req.body;
     try {
@@ -77,7 +77,21 @@ router.get("/:recordid", Authorized, async (req, res) => {
 });
 
 /**
- * POST /clips/tag
+ * GET /clips/:recordid/:clipid - Get clip video file download link
+ */
+router.get("/:recordid/:clipid", Authorized, async (req, res) => {
+    const { recordid, clipid } = req.params;
+    try {
+        const response = await getClip(req.id, recordid, clipid);
+        return res.status(response.statusCode).json(response);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).send(e);
+    }
+});
+
+/**
+ * PATCH /clips/tag - Set clips id
  */
 router.post("/tag", Authorized, async (req, res) => {
     const { recordid, clipid, tag } = req.body;
@@ -91,7 +105,7 @@ router.post("/tag", Authorized, async (req, res) => {
 });
 
 /**
- * GET /clips/tag/:tag
+ * GET /clips/tag/:tag - Get clips list searched by tag
  */
 router.get("/tag/:tag", Authorized, async (req, res) => {
     const { tag } = req.params;
