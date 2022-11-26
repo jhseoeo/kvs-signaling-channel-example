@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Header from "./header"
 import { Button, Row, Container, Card } from "react-bootstrap";
+import { getCookie, setCookie } from "../lib/cookie";
 
 
 function Home(props) {
@@ -25,6 +26,15 @@ function Home(props) {
         marginRight:"30pt", marginTop:"70pt", marginBottom:"-10pt"
     }
 
+    const handleOnClickStart = () => {
+        console.log(getCookie("access") == "undefined")
+        if (getCookie("access") == "undefined") {
+            window.location.href="/login"       
+        } else {
+            window.location.href="/modeSelector"                 
+        }
+    }
+
     return (
         <>
             <Header/>
@@ -36,7 +46,7 @@ function Home(props) {
 
                 }}>
                 <h1>노트북 웹캠으로 반려견의 하루를 관찰하세요</h1>
-                <Button style={buttonStyle} onClick={() => {window.location.href="/login";}}>시작하기</Button>
+                <Button style={buttonStyle} onClick={handleOnClickStart}>시작하기</Button>
 
             </div>
             

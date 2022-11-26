@@ -7,15 +7,19 @@ export default function VideoModal(props) {
     const styleSheets = {
         
     }
-    console.log(`videomodal ${props.url}`)
 
-    // useEffect(() => {
-    //     fetch(props.url, { method: 'GET' })
-    //         .then(res => {
-    //             console.log(res)
-    //             return res.blob();
-    //         })
-    // })
+    useEffect(() => {
+        if (props.clipId && props.recordId) {
+            // getclips() 호출 
+            fetch(props.url, { method: 'GET' })
+            .then(res => {
+                console.log(res)
+                return res.blob();
+            })
+            .catch(err => console.log(err))
+        }
+        
+    })
 
     return (
         <Modal

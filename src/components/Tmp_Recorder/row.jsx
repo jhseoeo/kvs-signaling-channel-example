@@ -9,19 +9,20 @@ import VideoModal from "../videoModal";
 // "link": "https://dogibogi-laptop.s3.ap-northeast-2.amazonaws.com/3/49/2022-11-18-0%3A56%3A39.webm?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV6AMEL465PKO6YAE%2F20221123%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20221123T112829Z&X-Amz-Expires=3600&X-Amz-Signature=e70b925fc36bedc0cfb6ead2ccf041f164a48e66499e674b814cb11e1f982b9f&X-Amz-SignedHeaders=host"
 
 function Row(props) {
-    const [videoUrl, setVideoUrl] = useState("")
+    const [clipId, setClipId] = useState("")
     const [showModal, setShowModal] = useState(false)
     const [clips, setClips] = useState([
         {
             recorded_at: "",
             link: "",
-            thumbNail: ""
+            clipid: "",
+            tag: ""
         }
     ]);
     
     const handleClick = (clip) => {
         // 영상 팝업으로 실행
-        setVideoUrl(clip.link)
+        setClipId(clip.clipId)
         // setShowModal(true)
         setShowModal(clip.link.length > 0)
     };
@@ -67,7 +68,8 @@ function Row(props) {
                 <VideoModal
                     showModal={showModal}
                     handleClose={() => { setShowModal(false) }}
-                    url={videoUrl}                
+                    recordId={props.recordId}
+                    clipId={clipId}
                 />
 
                 <h2 style={{marginLeft:"20px", fontSize:"20px"}}>{props.recordTimeStartToEnd}</h2>
@@ -79,8 +81,7 @@ function Row(props) {
                         key={id++}
                         onClick={() => handleClick(clip)}
                         className={"row_poster row_posterLarge"}
-                        src='img/testpicture.jpeg'
-                        // src={clip.thumbNail} 
+                        src={clip.link} 
                         alt={clip.recorded_at} 
                     />
                 ))}

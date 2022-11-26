@@ -38,7 +38,8 @@ function Login(props) {
                 userid: input.id,
                 password: input.password,
             })
-        }).then(res => res.json());
+        }).then(res => res.json())
+        .catch(err => console.log(err));
 
         if (res.ok) {
             setCookie("access", "Bearer " + res.data.accessToken);
