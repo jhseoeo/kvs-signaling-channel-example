@@ -1,9 +1,14 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useBeforeunload } from "react-beforeunload";
 import "./player.css";
+
 const createSignalingChannel = require("../../lib/kinesis/createChannel");
 const deleteSignalingChannel = require("../../lib/kinesis/deleteChannel");
 const startMaster = require("../../lib/kinesis/master");
+const { RecordVideo, startDecideRecordLoop } = require("../../lib/recoder");
+const uploadClip = require("../../lib/clips/uploadClip");
+
+const LOCALVIEW_SHOW_TIMEOUT = 30 * 1000;
 
 /**
  * Page that produces video stream and transfers to Viewer
@@ -14,7 +19,24 @@ function Master() {
     const masterLocalView = useRef();
     const localStream = useRef();
     const closeFunc = useRef();
-    const connectionState = useRef(false);
+    const [connectionState, setConnectionState] = useState(false);
+    const [showLocalView, setShowLocalView] = useState(false);
+    let showLocalViewTimeout;
+
+    const handleShowLocalView = () => {
+        if (showLocalView) {
+            if (showLocalViewTimeout) {
+                clearTimeout(showLocalViewTimeout);
+                showLocalViewTimeout = null;
+            }
+            setShowLocalView(false);
+        } else {
+            showLocalViewTimeout = setTimeout(() => {
+                setShowLocalView(false);
+            }, LOCALVIEW_SHOW_TIMEOUT / 10);
+            setShowLocalView(true);
+        }
+    };
 
     useBeforeunload((e) => {
         e.preventDefault();
@@ -35,16 +57,22 @@ function Master() {
                 console.error("[MASTER] Could not find webcam");
             }
 
+            await startDecideRecordLoop(
+                localStream.current,
+                async (thumbnail) => {
+                    const file = await RecordVideo(localStream.current, 5 * 1000);
+                    uploadClip(file, thumbnail);
+                },
+                () => {
+                    return connectionState;
+                }
+            );
+
             await createSignalingChannel()
                 .then((channelData) => {
-                    return startMaster(
-                        channelData.channelData,
-                        localStream.current,
-                        () => {},
-                        (connect) => {
-                            connectionState.current = connect;
-                        }
-                    );
+                    return startMaster(channelData.channelData, localStream.current, (connected) => {
+                        setConnectionState(connected);
+                    });
                 })
                 .then((close) => {
                     closeFunc.current = close;
@@ -59,7 +87,16 @@ function Master() {
 
     return (
         <>
-            <video className="viewer-local-view" autoPlay playsInline controls muted ref={masterLocalView} />
+            <button onClick={handleShowLocalView}> {showLocalView ? "보이기" : "숨기기"} </button>
+            <video
+                className="viewer-local-view"
+                autoPlay
+                playsInline
+                controls
+                muted
+                ref={masterLocalView}
+                style={{ display: showLocalView ? "block" : "none" }}
+            />
         </>
     );
 }
