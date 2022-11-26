@@ -21,7 +21,7 @@ function imageBitmapToBlob(imgbmp) {
             canvas = null;
             ctx = null;
             resolve(blob);
-        });
+        }, "image/jpeg");
     });
 }
 

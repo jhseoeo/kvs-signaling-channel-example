@@ -14,11 +14,10 @@ class CustomSigner {
  * Start WebRTC Connection for Master side.
  * @param {object} kinesisInfo - Information about KInesis
  * @param {HTMLVideoElement} localView - HTML Video Player that displays Webcam view of master
- * @param {function(string)} onStatsReport - callback function to inform current stat of webrtc connection
  * @param {function(boolean)} onConnectionStatChange -
  * @return {function()} close function that sends connection termination signal to another peer
  */
-async function startMaster(kinesisInfo, localStream, onStatsReport, onConnectionStatChange) {
+async function startMaster(kinesisInfo, localStream, onConnectionStatChange) {
     const role = "MASTER";
     this.clientId = null;
     this.role = role;
@@ -57,14 +56,6 @@ async function startMaster(kinesisInfo, localStream, onStatsReport, onConnection
                 }
             };
         };
-
-        // Poll for connection stats
-        if (!this.peerConnectionStatsInterval) {
-            this.peerConnectionStatsInterval = setInterval(
-                () => this.peerConnection.getStats().then(onStatsReport),
-                1000
-            );
-        }
 
         // Send any ICE candidates to the other peer
         this.peerConnection.addEventListener("icecandidate", ({ candidate }) => {
