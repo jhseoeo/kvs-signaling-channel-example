@@ -21,8 +21,8 @@ async function getClip(userid, recordid, clipid) {
         return {
             statusCode: 200,
             ok: true,
-            message: "successfully changed clip's tag",
-            link: S3.getDownloadFileUrl(clip.s3path),
+            message: "clip's video link",
+            link: await S3.getDownloadFileUrl(clip.s3path),
         };
     } catch (e) {
         console.error(e);
@@ -33,3 +33,5 @@ async function getClip(userid, recordid, clipid) {
         };
     }
 }
+
+module.exports = getClip;
