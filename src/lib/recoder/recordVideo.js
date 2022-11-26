@@ -8,7 +8,7 @@ function RecordVideo(stream, recordTime) {
     return new Promise((resolve, reject) => {
         try {
             let blobs = [];
-            let media_recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+            let media_recorder = new MediaRecorder(stream, { mimeType: "video/webm; codecs=h264" });
 
             media_recorder.ondataavailable = (e) => {
                 blobs.push(e.data);

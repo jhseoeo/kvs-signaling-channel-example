@@ -1,19 +1,15 @@
 const { getCookie } = require("../cookie");
 
-
-async function getClips(recordid) {
+async function deleteRecord(recordid) {
     return await fetch(process.env.REACT_APP_PROXY_HOST + "/clips/" + recordid, {
-        method: "GET",
+        method: "DELETE",
         headers: {
             "Content-Type": "application/json",
             authorization: getCookie("access"),
             refresh: getCookie("refresh"),
         },
         body: null,
-    }).then((res) => res.json())
-    .catch(err => {
-        console.log(err)
-    });
+    }).then((res) => res.json());
 }
 
-module.exports = getClips;
+module.exports = deleteRecord;
