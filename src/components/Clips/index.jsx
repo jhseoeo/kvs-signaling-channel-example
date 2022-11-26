@@ -14,7 +14,7 @@ function Clips(props) {
             </button>
             <button
                 onClick={() => {
-                    getClips().then((x) => console.log(x));
+                    getClips(49).then((x) => console.log(x));
                 }}
             >
                 getClips

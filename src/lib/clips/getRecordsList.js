@@ -12,7 +12,10 @@ async function getRecordsList() {
             refresh: getCookie("refresh"),
         },
         body: null,
-    }).then((res) => res.json());
+    }).then((res) => res.json())
+    .catch(err => {
+        console.log(err)
+    });
 }
 
 module.exports = getRecordsList;

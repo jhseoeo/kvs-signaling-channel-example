@@ -3,8 +3,8 @@ const { getCookie } = require("../cookie");
 /**
  * Delete WebRTC Signaling Channel
  */
-async function getClips() {
-    return await fetch(process.env.REACT_APP_PROXY_HOST + "/clips/49", {
+async function getClips(recodeId) {
+    return await fetch(process.env.REACT_APP_PROXY_HOST + `/clips/${recodeId}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -12,7 +12,10 @@ async function getClips() {
             refresh: getCookie("refresh"),
         },
         body: null,
-    }).then((res) => res.json());
+    }).then((res) => res.json())
+    .catch(err => {
+        console.log(err)
+    });
 }
 
 module.exports = getClips;

@@ -81,7 +81,7 @@ function Viewer() {
                 flag={flag}
                 isShow={modalIsOpen}
                 closeCallback={() => setIsOpen(false)}
-                
+                dtoList={dtoList}
             />
 
             <video className="viewer-remote-view" autoPlay playsInline controls muted ref={viewerRemoteView} />
