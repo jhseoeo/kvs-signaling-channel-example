@@ -93,7 +93,7 @@ router.get("/:recordid/:clipid", Authorized, async (req, res) => {
 /**
  * PATCH /clips/tag - Set clips id
  */
-router.post("/tag", Authorized, async (req, res) => {
+router.patch("/tag", Authorized, async (req, res) => {
     const { recordid, clipid, tag } = req.body;
     try {
         const response = await setClipTag(req.id, recordid, clipid, tag);

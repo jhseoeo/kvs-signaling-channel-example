@@ -5,7 +5,7 @@ const S3BUCKET = process.env.S3_BUCKET;
 const S3OPTION = {
     region: process.env.S3_REGION,
     accessKeyId: process.env.S3_ACCESS_KEY_ID,
-    secretAccessKey: process.env.S3SECRET_ACCESS_KEY,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
     signatureVersion: "v4",
 };
 
