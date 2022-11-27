@@ -63,34 +63,6 @@ router.post("/confirm", Authorized, async (req, res) => {
 });
 
 /**
- * GET /clips/:recordid - Get Clips list in record
- */
-router.get("/:recordid", Authorized, async (req, res) => {
-    const { recordid } = req.params;
-    try {
-        const response = await getClipsList(req.id, recordid);
-        return res.status(response.statusCode).json(response);
-    } catch (e) {
-        console.error(e);
-        return res.status(500).send(e);
-    }
-});
-
-/**
- * GET /clips/:recordid/:clipid - Get clip video file download link
- */
-router.get("/:recordid/:clipid", Authorized, async (req, res) => {
-    const { recordid, clipid } = req.params;
-    try {
-        const response = await getClip(req.id, recordid, clipid);
-        return res.status(response.statusCode).json(response);
-    } catch (e) {
-        console.error(e);
-        return res.status(500).send(e);
-    }
-});
-
-/**
  * PATCH /clips/tag - Set clips id
  */
 router.patch("/tag", Authorized, async (req, res) => {
@@ -119,12 +91,40 @@ router.get("/tag/:tag", Authorized, async (req, res) => {
 });
 
 /**
+ * GET /clips/:recordid - Get Clips list in record
+ */
+router.get("/:recordid", Authorized, async (req, res) => {
+    const { recordid } = req.params;
+    try {
+        const response = await getClipsList(req.id, recordid);
+        return res.status(response.statusCode).json(response);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).send(e);
+    }
+});
+
+/**
  * DELETE /clips/:recordid - Delete record and all relevant clips
  */
 router.delete("/:recordid", Authorized, async (req, res) => {
     const { recordid } = req.params;
     try {
         const response = await deleteRecord(req.id, recordid);
+        return res.status(response.statusCode).json(response);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).send(e);
+    }
+});
+
+/**
+ * GET /clips/:recordid/:clipid - Get clip video file download link
+ */
+router.get("/:recordid/:clipid", Authorized, async (req, res) => {
+    const { recordid, clipid } = req.params;
+    try {
+        const response = await getClip(req.id, recordid, clipid);
         return res.status(response.statusCode).json(response);
     } catch (e) {
         console.error(e);
