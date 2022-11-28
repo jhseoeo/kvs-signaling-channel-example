@@ -35,3 +35,21 @@
     transform: scale(1.09);
     opacity: 1;
 }
+
+.HashWrapInner2 {
+    margin-top: 20px;
+    background: #d6dbf6;
+    border-radius: 56px;
+    padding: 8px 12px;
+    color: #565bf6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1rem;
+    line-height: 20px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    width: fit-content;
+}
