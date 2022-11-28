@@ -18,7 +18,7 @@ async function searchClipByTag(userid, tag) {
             };
 
         const videoLinksPromise = clips.map((val) => {
-            return S3.getDownloadFileUrl(val.s3path);
+            return S3.getUploadThumbnailUrl(val.s3path);
         });
         const videoLinks = await Promise.all(videoLinksPromise);
         const videoDatas = videoLinks.map((val, idx) => {
