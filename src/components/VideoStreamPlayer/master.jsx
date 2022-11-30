@@ -4,6 +4,10 @@ import "./player.css";
 import React from 'react';
 import Header from "../header"
 import Modal from "../modal"
+import { ConstructionOutlined } from "@mui/icons-material";
+import IconButton from '@mui/material/IconButton';
+import HelpOutlineTwoToneIcon from '@mui/icons-material/HelpOutlineTwoTone';
+import { Button, Row, Container, Card } from "react-bootstrap";
 
 const createSignalingChannel = require("../../lib/kinesis/createChannel");
 const deleteSignalingChannel = require("../../lib/kinesis/deleteChannel");
@@ -27,24 +31,23 @@ function Master() {
 
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const [connectionState, setConnectionState] = useState(false);
-    const [showLocalView, setShowLocalView] = useState(false);
+    const [showLocalView, setShowLocalView] = useState(true);
     let showLocalViewTimeout;
 
     const handleShowLocalView = () => {
         if (showLocalView) {
-            if (showLocalViewTimeout) {
-                clearTimeout(showLocalViewTimeout);
-                showLocalViewTimeout = null;
-            }
+            // if (showLocalViewTimeout) {
+            //     clearTimeout(showLocalViewTimeout);
+            //     showLocalViewTimeout = null;
+            // }
             setShowLocalView(false);
         } else {
-            showLocalViewTimeout = setTimeout(() => {
-                setShowLocalView(false);
-            }, LOCALVIEW_SHOW_TIMEOUT / 10);
+            // showLocalViewTimeout = setTimeout(() => {
+            // setShowLocalView(false);
+            // }, LOCALVIEW_SHOW_TIMEOUT / 10);
             setShowLocalView(true);
         }
     };
-
 
     useBeforeunload((e) => {
         e.preventDefault();
@@ -93,24 +96,68 @@ function Master() {
         // eslint-disable-next-line
     }, []);
 
+    const style = {
+        buttonStyle: {
+            position: 'absolute',
+            right: '10%',
+            top: '7%',
+        },
+        showButtonStyle: {
+            position: 'absolute',
+            left: '10%',
+            bottom: '2%',
+            // marginLeft:"10px"
+        },
+        showButtonStyle2: {
+            position: 'absolute',
+            right: '10%',
+            bottom: '2%',
+        },
+        divStyle: {
+            // display:"flex",
+            // position: 'absolute',
+            // right: '10%',
+            // bottom: '2%',
+        },
+        videoStyle: {
+            width: "80%",
+            position: "absolute",
+            right: "10%",
+            top: "7%",
+            marginTop: "50px",
+            display: showLocalView ? "block" : "none"
+        }
+    }
+
+    const onBackButtonClick = () => {
+        window.location.href="/modeSelector"
+    }
+
     return (
         <>
-            <Header/>
+            <Header />
             <Modal
                 flag={flag}
                 isShow={modalIsOpen}
                 closeCallback={() => setIsOpen(false)}
             />
-            <button onClick={handleShowLocalView}> {showLocalView ? "보이기" : "숨기기"} </button>
+            <div style={style.divStyle}>
+                <Button style={style.showButtonStyle2} onClick={onBackButtonClick}>나가기</Button>
+                <Button style={style.showButtonStyle} onClick={() => { setShowLocalView(!showLocalView) }}> {showLocalView ? "숨기기" : "보이기"} </Button>
+            </div>
+
             <video
-                className="viewer-local-view"
+                // className="viewer-remote-view"
                 autoPlay
                 playsInline
                 controls
                 muted
                 ref={masterLocalView}
-                style={{ display: showLocalView ? "block" : "none" }}
+                style={style.videoStyle}
             />
+            <IconButton aria-label="delete" size="large" color="primary" style={style.buttonStyle} onClick={() => setIsOpen(true)}>
+                <HelpOutlineTwoToneIcon fontSize="inherit" />
+            </IconButton>
         </>
     );
 }

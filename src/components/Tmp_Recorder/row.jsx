@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import "./row.css";
+import styled from "styled-components";
 import getClips from "../../lib/clips/getClips";
 import VideoModal from "../videoModal";
 import getClip from "../../lib/clips/getClip"
+import { searchClipByTag } from '../../lib/clips';
 
 
 // clips : {
@@ -15,6 +17,7 @@ function Row(props) {
     const [clipId, setClipId] = useState('')
     const [tag, setTag] = useState('')
     const [firstLoad, setFirstLoad] = useState(true)
+    const [recordedAt, setRecordedAt] = useState('')
     const [clips, setClips] = useState([
         {
             recorded_at: "",
@@ -29,6 +32,7 @@ function Row(props) {
         if (clip.clipid && props.recordId) {
             setClipId(clip.clipid)
             setTag(clip.tag)
+            setRecordedAt(clip.recorded_at)
 
             getClip(props.recordId, clip.clipid).then((result) => {
                 console.log(result)
@@ -52,7 +56,7 @@ function Row(props) {
 
             let tempList = []
             if (result && result.videoDatas) {
-                tempList = result.videoDatas
+                tempList = result.videoDatas.sort(function(a, b) { return a.recorded_at - b.recorded_at})
             } else {
                 for (let i = 0; i < 20; i++) {
                     tempList.push({
@@ -91,6 +95,7 @@ function Row(props) {
                         showModal={showModal}
                         handleClose={handleClose}
                         videoUrl={videoUrl}
+                        recordedAt={recordedAt}
                         recordId={props.recordId}
                         clipId={clipId}
                         tag={tag}
@@ -111,7 +116,11 @@ function Row(props) {
                                     src={clip.link}
                                     alt={clip.recorded_at}
                                 />
-                                <div className='HashWrapInner2' hidden={!clip.tag ||  (clip.tag && clip.tag.length == 0)}>{'#' + clip.tag}</div>
+                                <div
+                                    className='HashWrapInner2'
+                                    hidden={!clip.tag || (clip.tag && clip.tag.length == 0)}
+                                    onClick={() => { props.tagClickCallback(clip.tag) }}
+                                >{'#' + clip.tag}</div>
                             </div>
                         ))}
                     </div>

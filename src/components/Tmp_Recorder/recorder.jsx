@@ -24,58 +24,7 @@ function Recorder() {
     const cameraStream = useRef();
     const flag = "recorder"
 
-    const [tagResult, setTagResult] = useState([
-        // {
-        //     recorded_at: "2022-11-26T12:59:34.001Z",
-        //     recordid: "3",
-        //     link: "https://dogibogi-laptop.s3.ap-northeast-2.amazonaws.com/1/3/2022-11-26-12%3A59%3A33.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV6AMEL465PKO6YAE%2F20221128%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20221128T154456Z&X-Amz-Expires=3600&X-Amz-Signature=259c9f56f839a5a115d2a3311191b99b4d75e792df6d1672cdbdc6026d3e5d4b&X-Amz-SignedHeaders=host",
-        //     clipid: "2",
-        //     tag: "태그예요"
-        // },
-        // {
-        //     recorded_at: "2022-11-26T12:59:34.001Z",
-        //     recordid: "3",
-        //     link: "https://dogibogi-laptop.s3.ap-northeast-2.amazonaws.com/1/3/2022-11-26-12%3A59%3A33.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV6AMEL465PKO6YAE%2F20221128%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20221128T154456Z&X-Amz-Expires=3600&X-Amz-Signature=259c9f56f839a5a115d2a3311191b99b4d75e792df6d1672cdbdc6026d3e5d4b&X-Amz-SignedHeaders=host",
-        //     clipid: "2",
-        //     tag: "태그예요"
-        // },
-        // {
-        //     recorded_at: "2022-11-26T12:59:34.001Z",
-        //     recordid: "3",
-        //     link: "https://dogibogi-laptop.s3.ap-northeast-2.amazonaws.com/1/3/2022-11-26-12%3A59%3A33.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV6AMEL465PKO6YAE%2F20221128%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20221128T154456Z&X-Amz-Expires=3600&X-Amz-Signature=259c9f56f839a5a115d2a3311191b99b4d75e792df6d1672cdbdc6026d3e5d4b&X-Amz-SignedHeaders=host",
-        //     clipid: "2",
-        //     tag: "태그예요"
-        // },
-        // {
-        //     recorded_at: "2022-11-26T12:59:34.001Z",
-        //     recordid: "3",
-        //     link: "https://dogibogi-laptop.s3.ap-northeast-2.amazonaws.com/1/3/2022-11-26-12%3A59%3A33.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV6AMEL465PKO6YAE%2F20221128%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20221128T154456Z&X-Amz-Expires=3600&X-Amz-Signature=259c9f56f839a5a115d2a3311191b99b4d75e792df6d1672cdbdc6026d3e5d4b&X-Amz-SignedHeaders=host",
-        //     clipid: "2",
-        //     tag: "태그예요"
-        // },
-        // {
-        //     recorded_at: "2022-11-26T12:59:34.001Z",
-        //     recordid: "3",
-        //     link: "https://dogibogi-laptop.s3.ap-northeast-2.amazonaws.com/1/3/2022-11-26-12%3A59%3A33.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV6AMEL465PKO6YAE%2F20221128%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20221128T154456Z&X-Amz-Expires=3600&X-Amz-Signature=259c9f56f839a5a115d2a3311191b99b4d75e792df6d1672cdbdc6026d3e5d4b&X-Amz-SignedHeaders=host",
-        //     clipid: "2",
-        //     tag: "태그예요"
-        // },
-        // {
-        //     recorded_at: "2022-11-26T12:59:34.001Z",
-        //     recordid: "3",
-        //     link: "https://dogibogi-laptop.s3.ap-northeast-2.amazonaws.com/1/3/2022-11-26-12%3A59%3A33.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV6AMEL465PKO6YAE%2F20221128%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20221128T154456Z&X-Amz-Expires=3600&X-Amz-Signature=259c9f56f839a5a115d2a3311191b99b4d75e792df6d1672cdbdc6026d3e5d4b&X-Amz-SignedHeaders=host",
-        //     clipid: "2",
-        //     tag: "태그예요"
-        // },
-        // {
-        //     recorded_at: "2022-11-26T12:59:34.001Z",
-        //     recordid: "3",
-        //     link: "https://dogibogi-laptop.s3.ap-northeast-2.amazonaws.com/1/3/2022-11-26-12%3A59%3A33.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV6AMEL465PKO6YAE%2F20221128%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20221128T154456Z&X-Amz-Expires=3600&X-Amz-Signature=259c9f56f839a5a115d2a3311191b99b4d75e792df6d1672cdbdc6026d3e5d4b&X-Amz-SignedHeaders=host",
-        //     clipid: "2",
-        //     tag: "태그예요"
-        // }
-
-    ])
+    const [tagResult, setTagResult] = useState([])
     const [hashtag, setHashtag] = useState('')
     const [showModal, setShowModal] = useState(false)
     const [videoUrl, setVideoUrl] = useState("")
@@ -103,6 +52,20 @@ function Recorder() {
         }
     ]);
 
+    const handleTagClick = (tag) => {
+        console.log(tag)
+        if (tag.length !== 0 && hashtag !== tag) {
+            setSearch(tag)
+            searchClipByTag(tag).then((result) => {
+                // 클립 다시 보여주기 
+                console.log("searchClipByTag")
+                console.log(result.videoDatas)
+                if (result && result.videoDatas) {
+                    setTagResult(result.videoDatas)
+                }
+            }).catch(err => console.log(err))
+        }
+    }
 
     const onKeyUp = useCallback(
         (e) => {
@@ -117,10 +80,9 @@ function Recorder() {
                         setHashtag(e.target.value)
                         searchClipByTag(e.target.value).then((result) => {
                             // 클립 다시 보여주기 
+                            console.log("searchClipByTag")
                             console.log(result.videoDatas)
                             if (result && result.videoDatas) {
-
-                                console.log(result.videoDatas)
                                 setTagResult(result.videoDatas)
                             }
                         })
@@ -136,7 +98,6 @@ function Recorder() {
         getRecordsList().then((result) => {
             console.log("getRecordsList()")
             console.log(result)
-            // console.log(result.recordlist)
 
             if (result && result.recordlist) {
                 // 리스폰스 결과값 저장
@@ -204,6 +165,7 @@ function Recorder() {
         setShowModal(false)
     }
 
+
     return (
         <div>
             <Header />
@@ -234,17 +196,17 @@ function Recorder() {
                 {tagResult.length == 0 && recordList.map(record => (
                     <Row
                         key={record.recordid}
-                        recordTimeStartToEnd={`${moment(Date(record.record_start)).format("MM월 DD일")}`}
+                        recordTimeStartToEnd={`${moment(record.record_start).format("MM월 DD일")}`}
                         recordId={record.recordid}
+                        tagClickCallback={(tag) => handleTagClick(tag)}
                     />
                 ))}
 
                 {tagResult.length !== 0 &&
-
-                    < Grid style={{ margin: "10px" }} container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                        {tagResult.map((clip, index) => (
+                    <Grid style={{ margin: "10px" }} container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                        {tagResult && tagResult.map((clip, index) => (
                             <Grid item xs={2} sm={4} md={4} key={index}>
-                                <div >
+                                <div>
                                     <img
                                         key={index}
                                         onClick={() => handleClick(clip)}
@@ -252,7 +214,10 @@ function Recorder() {
                                         src={clip.link}
                                         alt={clip.recorded_at}
                                     />
-                                    <div className='HashWrapInner2' hidden={!clip.tag || (clip.tag && clip.tag.length == 0)}>{'#' + clip.tag}</div>
+                                    <div
+                                        className='HashWrapInner2'
+                                        hidden={!clip.tag || (clip.tag && clip.tag.length == 0)}
+                                    >{'#' + clip.tag}</div>
                                 </div>
                             </Grid>
                         ))}

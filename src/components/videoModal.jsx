@@ -2,8 +2,10 @@ import Modal from 'react-bootstrap/Modal';
 import { useState, useEffect, useCallback } from "react";
 import React from 'react'
 import "./videoModal.css"
+import moment from "moment";
 import setClipTag from '../lib/clips/setClipTag';
 import { ConnectingAirportsOutlined } from '@mui/icons-material';
+import CloseButton from 'react-bootstrap/CloseButton';
 
 export default function VideoModal(props) {
     // onChange로 관리할 문자열
@@ -11,7 +13,7 @@ export default function VideoModal(props) {
     // 저장된 해시 태그 
     const [savedHashTag, setSavedHashtag] = useState('')
 
-    
+
 
 
 
@@ -20,7 +22,7 @@ export default function VideoModal(props) {
             if (process.browser) {
                 /* enter 키 코드 :13 */
                 if (e.keyCode === 13 && e.target.value.trim() !== '' && savedHashTag.length == 0) {
-                    console.log('Enter Key 입력됨!', e.target.value)                    
+                    console.log('Enter Key 입력됨!', e.target.value)
                     setSavedHashtag(e.target.value)
                     console.log(savedHashTag)
                     setHashtag('')
@@ -51,6 +53,10 @@ export default function VideoModal(props) {
     const handleClose = () => {
         let tag = savedHashTag
 
+        if (tag.length == 0) {
+            tag = null
+        }
+
         setClipTag(props.recordId, props.clipId, tag).then(result => {
             console.log(`${tag} setClipTag called`)
             console.log(result)
@@ -69,7 +75,10 @@ export default function VideoModal(props) {
             aria-labelledby="contained-modal-title-vcenter"
             centered
         >
-            <Modal.Header closeButton />
+            <Modal.Header closeButton>
+                <Modal.Title>{`${moment(props.recordedAt).format("LT")}`}</Modal.Title>
+                {/* <Modal.Title>{props.recordedAt}</Modal.Title> */}
+            </Modal.Header>
             <Modal.Body>
                 <video controls autoPlay={true} width={"100%"} height={"100%"}>
                     <source src={props.videoUrl} type="video/webm"></source>
@@ -77,11 +86,12 @@ export default function VideoModal(props) {
 
                 <div className="HashWrap">
                     <div className="HashWrapOuter">
-                    <div
-                        className="HashWrapInner"
-                        hidden={savedHashTag.length == 0}
-                        onClick={onTagClick}
-                    >{'#' + savedHashTag}</div>
+                        <div
+                            className="HashWrapInner"
+                            hidden={savedHashTag.length == 0}
+                            onClick={onTagClick}
+                        >{'#' + savedHashTag} <CloseButton className='HashWrapCancel'/></div>
+
                     </div>
                     <input
                         hidden={savedHashTag.length !== 0}

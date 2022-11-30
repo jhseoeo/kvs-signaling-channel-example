@@ -47,6 +47,13 @@
     cursor: pointer;
 }
 
+.HashWrapCancel {
+    margin-left: 7px;
+    justify-content: center;
+    align-items: center;
+    font-size: 9px;
+}
+
 .HashInput {
     width: auto;
     margin: 5px;
