@@ -3,9 +3,6 @@ import { useBeforeunload } from "react-beforeunload";
 import "./player.css";
 import React from "react";
 import Header from "../header";
-import Modal from "../modal";
-import IconButton from "@mui/material/IconButton";
-import HelpOutlineTwoToneIcon from "@mui/icons-material/HelpOutlineTwoTone";
 import { Button } from "react-bootstrap";
 
 const createSignalingChannel = require("../../lib/kinesis/createChannel");
@@ -14,7 +11,7 @@ const startMaster = require("../../lib/kinesis/master");
 const { RecordVideo, startDecideRecordLoop } = require("../../lib/recoder");
 const uploadClip = require("../../lib/clips/uploadClip");
 
-const LOCALVIEW_SHOW_TIMEOUT = 30 * 1000;
+const LOCALVIEW_SHOW_TIMEOUT = 10 * 1000;
 
 /**
  * Page that produces video stream and transfers to Viewer
@@ -26,11 +23,9 @@ function Master() {
     const localStream = useRef();
     const closeFunc = useRef();
 
-    const flag = "master";
-
-    const [modalIsOpen, setIsOpen] = React.useState(false);
     const [connectionState, setConnectionState] = useState(false);
-    const [showLocalView, setShowLocalView] = useState(true);
+    const [showLocalView, setShowLocalView] = useState(false);
+    const [loaded, setLoaded] = useState(false);
     let showLocalViewTimeout;
 
     const handleShowLocalView = () => {
@@ -43,7 +38,7 @@ function Master() {
         } else {
             showLocalViewTimeout = setTimeout(() => {
                 setShowLocalView(false);
-            }, LOCALVIEW_SHOW_TIMEOUT / 10);
+            }, LOCALVIEW_SHOW_TIMEOUT);
             setShowLocalView(true);
         }
     };
@@ -80,6 +75,13 @@ function Master() {
 
             await createSignalingChannel()
                 .then((channelData) => {
+                    if (channelData.ok) {
+                        alert("설정이 완료되었습니다. 녹화를 시작합니다!");
+                    } else {
+                        alert("설정 중 오류가 발생하였습니다. 다시 시도해주세요!");
+                        window.location.href = "/modeSelector";
+                    }
+
                     return startMaster(channelData.channelData, localStream.current, (connected) => {
                         setConnectionState(connected);
                     });
@@ -90,6 +92,8 @@ function Master() {
                 .catch((e) => {
                     console.log(e);
                 });
+
+            setLoaded(true);
         };
         makeLocalStream();
         // eslint-disable-next-line
@@ -112,12 +116,7 @@ function Master() {
             right: "10%",
             bottom: "2%",
         },
-        divStyle: {
-            // display:"flex",
-            // position: 'absolute',
-            // right: '10%',
-            // bottom: '2%',
-        },
+
         videoStyle: {
             width: "80%",
             position: "absolute",
@@ -125,6 +124,11 @@ function Master() {
             top: "7%",
             marginTop: "50px",
             display: showLocalView ? "block" : "none",
+        },
+
+        imgStyle: {
+            maxWidth: "600px",
+            minWidth: "300px",
         },
     };
 
@@ -135,7 +139,6 @@ function Master() {
     return (
         <>
             <Header />
-            <Modal flag={flag} isShow={modalIsOpen} closeCallback={() => setIsOpen(false)} />
             <div style={style.divStyle}>
                 <Button style={style.showButtonStyle2} onClick={onBackButtonClick}>
                     나가기
@@ -145,8 +148,25 @@ function Master() {
                 </Button>
             </div>
 
+            <div
+                style={{
+                    display: !showLocalView ? "block" : "none",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                }}
+            >
+                {loaded ? (
+                    <img src="img/recording.png" alt="recording" style={style.imgStyle} />
+                ) : (
+                    <img src="img/loading.png" alt="loading" style={style.imgStyle} />
+                )}
+            </div>
             <video
                 // className="viewer-remote-view"
+                width="80%"
+                height="80%"
                 autoPlay
                 playsInline
                 controls
@@ -154,15 +174,6 @@ function Master() {
                 ref={masterLocalView}
                 style={style.videoStyle}
             />
-            <IconButton
-                aria-label="delete"
-                size="large"
-                color="primary"
-                style={style.buttonStyle}
-                onClick={() => setIsOpen(true)}
-            >
-                <HelpOutlineTwoToneIcon fontSize="inherit" />
-            </IconButton>
         </>
     );
 }

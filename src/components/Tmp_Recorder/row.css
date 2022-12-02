@@ -1,6 +1,12 @@
 .row2 {
+    margin: 20px;
+    padding-top: 20px;
+    border: 1px solid #f1f2f3;
+    background-color: #f1f2f3;
+    border-radius: 15px;
     color: black;
     margin-bottom: 30px;
+    margin-right: 20px;
 }
 
 .row_posters {
@@ -19,15 +25,13 @@
 .row_posters::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: #e3e3e3;
-    -webkit-box-shadow: 0 0 0.5px rgba(255, 255, 255, .5);
+    -webkit-box-shadow: 0 0 0.5px rgba(255, 255, 255, 0.5);
 }
 
 .row_poster {
-
     object-fit: contain;
     max-height: 100px;
     transition: transform 450ms;
-    margin-right: 20px;
 }
 
 .row_poster:hover {

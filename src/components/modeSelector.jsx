@@ -4,8 +4,14 @@ import { Button, Row, Container } from "react-bootstrap";
 import { MdOndemandVideo } from "react-icons/md";
 import { TbVideo } from "react-icons/tb";
 import { FaPhotoVideo } from "react-icons/fa";
+import IconButton from "@mui/material/IconButton";
+import HelpOutlineTwoToneIcon from "@mui/icons-material/HelpOutlineTwoTone";
+import Modal from "./modal";
 
 function ModeSelector(props) {
+    const [modalIsOpen, setIsOpen] = React.useState(false);
+    const flag = "modeSelector";
+
     const iconStyle = {
         width: "50pt",
         height: "50pt",
@@ -31,10 +37,29 @@ function ModeSelector(props) {
         alignItems: "center",
     };
 
+    const style = {
+        buttonStyle: {
+            position: "absolute",
+            right: "10%",
+            top: "10%",
+        },
+    };
+
     return (
         <>
             <Header />
+            <Modal flag={flag} isShow={modalIsOpen} closeCallback={() => setIsOpen(false)} />
+
             <div>
+                <IconButton
+                    aria-label="delete"
+                    size="large"
+                    color="primary"
+                    style={style.buttonStyle}
+                    onClick={() => setIsOpen(true)}
+                >
+                    <HelpOutlineTwoToneIcon fontSize="inherit" />
+                </IconButton>
                 <Container style={containerStyle}>
                     <Row>
                         <Button style={cardStyle} href="/viewer">

@@ -4,6 +4,8 @@
     font-size: 1.125rem;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
     letter-spacing: -0.6px;
     color: #444241;
     border-bottom: 1.6px solid gainsboro;
@@ -20,15 +22,13 @@
     letter-spacing: -0.6px;
     color: #444241;
     padding: 2px 2px 0px 2px;
-    position:relative;
+    position: relative;
 }
-
 
 .HashWrapOuter {
     display: flex;
     flex-wrap: wrap;
 }
-
 
 .HashWrapInner {
     margin-top: 5px;
@@ -80,4 +80,17 @@
     /* margin-bottom: 0.75rem; */
     min-width: 20rem;
     border: 2px solid #e3e3e3;
+}
+
+.ClipDelete {
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+.ClipDelete:hover {
+    background-color: #e1e2e3;
+}
+
+.ClipDelete:active {
+    background-color: #d1d2d3;
 }

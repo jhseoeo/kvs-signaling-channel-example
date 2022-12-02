@@ -29,7 +29,7 @@ function Home(props) {
     };
 
     const handleOnClickStart = () => {
-        if (getCookie("access")) {
+        if (!getCookie("access")) {
             window.location.href = "/login";
         } else {
             window.location.href = "/modeSelector";

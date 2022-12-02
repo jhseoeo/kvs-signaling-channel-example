@@ -3,9 +3,6 @@ import { useBeforeunload } from "react-beforeunload";
 import "./player.css";
 import React from "react";
 import Header from "../header";
-import Modal from "../modal";
-import IconButton from "@mui/material/IconButton";
-import HelpOutlineTwoToneIcon from "@mui/icons-material/HelpOutlineTwoTone";
 
 const getSignalingChannelInfo = require("../../lib/kinesis/getChannelInfo");
 const startViewer = require("../../lib/kinesis/viewer");
@@ -18,8 +15,6 @@ const startViewer = require("../../lib/kinesis/viewer");
 function Viewer() {
     const viewerRemoteView = useRef();
     const closeFunc = useRef();
-    const flag = "viewer";
-    const [modalIsOpen, setIsOpen] = React.useState(false);
 
     const onConnectionTerminated = () => {
         window.location.href = "/";
@@ -38,37 +33,19 @@ function Viewer() {
                 closeFunc.current = close;
             })
             .catch((e) => {
+                console.log(e);
                 alert("설정된 웹캠이 없습니다");
                 window.location.href = "/modeselector";
-                console.log(e);
             });
 
         // eslint-disable-next-line
     }, []);
 
-    const style = {
-        buttonStyle: {
-            position: "absolute",
-            right: "10%",
-            top: "10%",
-        },
-    };
-
     return (
         <>
             <Header />
-            <Modal flag={flag} isShow={modalIsOpen} closeCallback={() => setIsOpen(false)} />
 
             <video className="viewer-remote-view" autoPlay playsInline controls muted ref={viewerRemoteView} />
-            <IconButton
-                aria-label="delete"
-                size="large"
-                color="primary"
-                style={style.buttonStyle}
-                onClick={() => setIsOpen(true)}
-            >
-                <HelpOutlineTwoToneIcon fontSize="inherit" />
-            </IconButton>
         </>
     );
 }

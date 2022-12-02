@@ -2,9 +2,10 @@ import Modal from "react-bootstrap/Modal";
 import { useState, useEffect, useCallback } from "react";
 import React from "react";
 import "./videoModal.css";
-import moment from "moment";
 import setClipTag from "../lib/clips/setClipTag";
+import deleteClip from "../lib/clips/deleteClip";
 import CloseButton from "react-bootstrap/CloseButton";
+import { MdOutlineDeleteOutline } from "react-icons/md";
 
 export default function VideoModal(props) {
     // onChange로 관리할 문자열
@@ -62,6 +63,23 @@ export default function VideoModal(props) {
         setSavedHashtag("");
         setHashtag("");
         props.handleClose();
+        props.refreshList();
+    };
+
+    const DeleteClip = async () => {
+        if (window.confirm("클립을 삭제하시겠습니까?")) {
+            const res = await deleteClip(props.recordId, props.clipId).catch((err) => {
+                console.error(err);
+            });
+            if (res.statusCode === 200) {
+                alert("클립이 삭제되었습니다!");
+                props.refreshList();
+                return;
+            } else {
+                alert("클립 삭제 중 에러가 발생하였습니다");
+                console.error(res.message);
+            }
+        }
     };
 
     return (
@@ -72,18 +90,14 @@ export default function VideoModal(props) {
             aria-labelledby="contained-modal-title-vcenter"
             centered
         >
-            <Modal.Header closeButton>
-                <Modal.Title>{`${moment(props.recordedAt).format("LT")}`}</Modal.Title>
-                {/* <Modal.Title>{props.recordedAt}</Modal.Title> */}
-            </Modal.Header>
+            <Modal.Header closeButton></Modal.Header>
             <Modal.Body>
                 <video controls autoPlay={true} width={"100%"} height={"100%"}>
                     <source src={props.videoUrl} type="video/webm"></source>
                 </video>
-
                 <div className="HashWrap">
-                    <div className="HashWrapOuter">
-                        <div className="HashWrapInner" hidden={savedHashTag.length === 0} onClick={onTagClick}>
+                    <div className="HashWrapOuter" hidden={savedHashTag.length === 0}>
+                        <div className="HashWrapInner" onClick={onTagClick}>
                             {"#" + savedHashTag} <CloseButton className="HashWrapCancel" />
                         </div>
                     </div>
@@ -96,6 +110,9 @@ export default function VideoModal(props) {
                         onKeyUp={onKeyUp}
                         placeholder="#해시태그 입력"
                     />
+                    <div className="ClipDelete" onClick={DeleteClip}>
+                        <MdOutlineDeleteOutline style={{ width: "24pt", height: "24pt" }} />
+                    </div>
                 </div>
             </Modal.Body>
         </Modal>

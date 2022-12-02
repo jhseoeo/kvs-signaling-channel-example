@@ -9,7 +9,7 @@ import Home from "./components/home";
 import Clip from "./components/Clips";
 import Recorder from "./components/Tmp_Recorder/recorder";
 import { getCookie } from "./lib/cookie";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
     return (
@@ -18,9 +18,9 @@ function App() {
                 <Route path="/" element={<Home />}></Route>
                 <Route path="/login" element={<Login />}></Route>
                 <Route path="/register" element={<Register />}></Route>
-                <Route path="/master/" element={getCookie("access") !== 'undefined' ? <Master/> : <Login/>}/>
-                <Route path="/viewer/" element={getCookie("access") !== 'undefined' ? <Viewer/> : <Login/>}/>
-                <Route path="/recorder" element={getCookie("access") !== 'undefined' ? <Recorder/> : <Login/>}/>
+                <Route path="/master/" element={getCookie("access") ? <Master /> : <Login />} />
+                <Route path="/viewer/" element={getCookie("access") ? <Viewer /> : <Login />} />
+                <Route path="/recorder" element={getCookie("access") ? <Recorder /> : <Login />} />
                 <Route path="/modeSelector" element={<ModeSelector />}></Route>
                 <Route path="/clip" element={<Clip />}></Route>
             </Routes>

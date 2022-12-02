@@ -27,6 +27,7 @@ async function startDecideRecordLoop(cameraStream, recordCallback, isStreaming) 
 
     const recordLoop = async () => {
         while (true) {
+            console.log(isStreaming());
             if (!imageCapture) continue;
             else if (isStreaming()) continue; // when streaming, pause recording
 
@@ -40,8 +41,8 @@ async function startDecideRecordLoop(cameraStream, recordCallback, isStreaming) 
                 console.log(compareResult, compThreshold, detectResult);
 
                 // successfully detected
-                if (true) {
-                    // if (detectResult in DETECTABLE_OBJECTS) {
+                // if (true) {
+                if (detectResult in DETECTABLE_OBJECTS) {
                     logicInterval = getNewInterval(logicInterval, matchRateDelta, true);
                     compThreshold = getNewThreshold(compThreshold, matchRateDelta, true);
                     recordCallback(imageBlob);
@@ -59,7 +60,7 @@ async function startDecideRecordLoop(cameraStream, recordCallback, isStreaming) 
         }
     };
 
-    setTimeout(recordLoop, START_RECORD_TIMEOUT / 1000);
+    setTimeout(recordLoop, START_RECORD_TIMEOUT);
 }
 
 module.exports = startDecideRecordLoop;

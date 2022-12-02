@@ -55,9 +55,19 @@ function Row(props) {
 
             let tempList = [];
             if (result && result.videoDatas) {
-                tempList = result.videoDatas.sort(function (a, b) {
-                    return a.recorded_at - b.recorded_at;
-                });
+                tempList = result.videoDatas
+                    .sort(function (a, b) {
+                        return a.recorded_at - b.recorded_at;
+                    })
+                    .map((v) => {
+                        return {
+                            clipid: v.clipid,
+                            link: v.link,
+                            tag: v.tag,
+                            hour: new Date(v.recorded_at).getHours(),
+                            minute: new Date(v.recorded_at).getMinutes(),
+                        };
+                    });
             } else {
                 for (let i = 0; i < 20; i++) {
                     tempList.push({
@@ -97,6 +107,7 @@ function Row(props) {
                     clipId={clipId}
                     tag={tag}
                     firstLoad={firstLoad}
+                    refreshList={reqGetClips}
                     loadCallback={() => setFirstLoad(false)}
                 />
 
@@ -112,6 +123,14 @@ function Row(props) {
                                 src={clip.link}
                                 alt={clip.recorded_at}
                             />
+                            <div style={{ fontWeight: "600", textAlign: "center" }}>
+                                녹화 시각 :{" "}
+                                {`
+                                ${clip.hour >= 10 ? clip.hour : "0" + clip.hour}:${
+                                    clip.minute >= 10 ? clip.minute : "0" + clip.minute
+                                }
+                            `}
+                            </div>
                             <div
                                 className="HashWrapInner2"
                                 hidden={!clip.tag || (clip.tag && clip.tag.length === 0)}

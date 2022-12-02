@@ -1,9 +1,35 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { slide as Menu } from "react-burger-menu";
 import Button from "react-bootstrap/Button";
-import { getCookie, setCookie } from "../lib/cookie";
+import { getCookie, removeCookie } from "../lib/cookie";
 
 function Header(props) {
+    const currentCookie = getCookie("access");
+    const currentCookie2 = getCookie("refresh");
+
+    useEffect(() => {
+        if (currentCookie)
+            fetch(process.env.REACT_APP_PROXY_HOST + "/auth", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: currentCookie,
+                    refresh: currentCookie2,
+                },
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.statusCode !== 200) {
+                        alert("로그인이 만료되었습니다. 다시 로그인해 주세요");
+                        removeCookie("access");
+                        removeCookie("refresh");
+                        window.location.href = "/";
+                    }
+                })
+                .catch((e) => console.log(e));
+        // eslint-disable-next-line
+    }, []);
+
     const menuStyle = {
         backgroundColor: "#0d6efd",
         border: "0pt",
@@ -31,16 +57,14 @@ function Header(props) {
         height: "60px",
     };
 
-    const currentCookie = getCookie("access");
-
     let loginButton;
-    if (currentCookie !== "undefined") {
+    if (currentCookie) {
         loginButton = (
             <Button
                 style={menuStyle1}
                 onClick={() => {
-                    setCookie("access", undefined);
-                    setCookie("refresh", undefined);
+                    removeCookie("access");
+                    removeCookie("refresh");
                     window.location.href = "/";
                 }}
             >

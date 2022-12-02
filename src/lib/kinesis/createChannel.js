@@ -14,8 +14,6 @@ async function createSignalingChannel() {
         },
     }).then((res) => res.json());
 
-    if (channel.ok) alert("채널 생성 성공!");
-    else alert("채널 생성 실패!");
     return channel;
 }
 
