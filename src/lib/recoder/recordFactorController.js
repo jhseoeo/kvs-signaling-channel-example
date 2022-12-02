@@ -1,4 +1,4 @@
-const { min, max } = require("../util");
+const { min /*max*/ } = require("../util");
 
 const INITIAL_INTERVAL = 1000 * 2;
 const MAX_INTERVAL = 5000;

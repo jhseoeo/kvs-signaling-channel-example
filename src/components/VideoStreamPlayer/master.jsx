@@ -1,13 +1,12 @@
 import { useRef, useEffect, useState } from "react";
 import { useBeforeunload } from "react-beforeunload";
 import "./player.css";
-import React from 'react';
-import Header from "../header"
-import Modal from "../modal"
-import { ConstructionOutlined } from "@mui/icons-material";
-import IconButton from '@mui/material/IconButton';
-import HelpOutlineTwoToneIcon from '@mui/icons-material/HelpOutlineTwoTone';
-import { Button, Row, Container, Card } from "react-bootstrap";
+import React from "react";
+import Header from "../header";
+import Modal from "../modal";
+import IconButton from "@mui/material/IconButton";
+import HelpOutlineTwoToneIcon from "@mui/icons-material/HelpOutlineTwoTone";
+import { Button } from "react-bootstrap";
 
 const createSignalingChannel = require("../../lib/kinesis/createChannel");
 const deleteSignalingChannel = require("../../lib/kinesis/deleteChannel");
@@ -27,7 +26,7 @@ function Master() {
     const localStream = useRef();
     const closeFunc = useRef();
 
-    const flag = "master"
+    const flag = "master";
 
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const [connectionState, setConnectionState] = useState(false);
@@ -36,15 +35,15 @@ function Master() {
 
     const handleShowLocalView = () => {
         if (showLocalView) {
-            // if (showLocalViewTimeout) {
-            //     clearTimeout(showLocalViewTimeout);
-            //     showLocalViewTimeout = null;
-            // }
+            if (showLocalViewTimeout) {
+                clearTimeout(showLocalViewTimeout);
+                showLocalViewTimeout = null;
+            }
             setShowLocalView(false);
         } else {
-            // showLocalViewTimeout = setTimeout(() => {
-            // setShowLocalView(false);
-            // }, LOCALVIEW_SHOW_TIMEOUT / 10);
+            showLocalViewTimeout = setTimeout(() => {
+                setShowLocalView(false);
+            }, LOCALVIEW_SHOW_TIMEOUT / 10);
             setShowLocalView(true);
         }
     };
@@ -98,20 +97,20 @@ function Master() {
 
     const style = {
         buttonStyle: {
-            position: 'absolute',
-            right: '10%',
-            top: '7%',
+            position: "absolute",
+            right: "10%",
+            top: "7%",
         },
         showButtonStyle: {
-            position: 'absolute',
-            left: '10%',
-            bottom: '2%',
+            position: "absolute",
+            left: "10%",
+            bottom: "2%",
             // marginLeft:"10px"
         },
         showButtonStyle2: {
-            position: 'absolute',
-            right: '10%',
-            bottom: '2%',
+            position: "absolute",
+            right: "10%",
+            bottom: "2%",
         },
         divStyle: {
             // display:"flex",
@@ -125,25 +124,25 @@ function Master() {
             right: "10%",
             top: "7%",
             marginTop: "50px",
-            display: showLocalView ? "block" : "none"
-        }
-    }
+            display: showLocalView ? "block" : "none",
+        },
+    };
 
     const onBackButtonClick = () => {
-        window.location.href="/modeSelector"
-    }
+        window.location.href = "/modeSelector";
+    };
 
     return (
         <>
             <Header />
-            <Modal
-                flag={flag}
-                isShow={modalIsOpen}
-                closeCallback={() => setIsOpen(false)}
-            />
+            <Modal flag={flag} isShow={modalIsOpen} closeCallback={() => setIsOpen(false)} />
             <div style={style.divStyle}>
-                <Button style={style.showButtonStyle2} onClick={onBackButtonClick}>나가기</Button>
-                <Button style={style.showButtonStyle} onClick={() => { setShowLocalView(!showLocalView) }}> {showLocalView ? "숨기기" : "보이기"} </Button>
+                <Button style={style.showButtonStyle2} onClick={onBackButtonClick}>
+                    나가기
+                </Button>
+                <Button style={style.showButtonStyle} onClick={handleShowLocalView}>
+                    {showLocalView ? "숨기기" : "보이기"}
+                </Button>
             </div>
 
             <video
@@ -155,7 +154,13 @@ function Master() {
                 ref={masterLocalView}
                 style={style.videoStyle}
             />
-            <IconButton aria-label="delete" size="large" color="primary" style={style.buttonStyle} onClick={() => setIsOpen(true)}>
+            <IconButton
+                aria-label="delete"
+                size="large"
+                color="primary"
+                style={style.buttonStyle}
+                onClick={() => setIsOpen(true)}
+            >
                 <HelpOutlineTwoToneIcon fontSize="inherit" />
             </IconButton>
         </>

@@ -1,17 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { slide as Menu } from "react-burger-menu";
 import Button from "react-bootstrap/Button";
-import { hover } from "@testing-library/user-event/dist/hover";
 import { getCookie, setCookie } from "../lib/cookie";
 
 function Header(props) {
-    const [loginOrOut, setLoginOrOut] = useState("로그인");
-
     const menuStyle = {
         backgroundColor: "#0d6efd",
         border: "0pt",
         height: "60px",
-        marginLeft: "50px",
+        marginLeft: "20px",
+        padding: "0",
     };
 
     const menuStyle1 = {
@@ -96,7 +94,7 @@ function Header(props) {
                         window.location.href = "/";
                     }}
                 >
-                    Home
+                    <img alt="logo" src="img/logo.png" style={{ height: "60px", top: "0px" }} />
                 </Button>
                 {loginButton}
                 {registerButton}

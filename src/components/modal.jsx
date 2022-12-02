@@ -1,53 +1,41 @@
-import CloseButton from 'react-bootstrap/CloseButton';
-import Modal from 'react-bootstrap/Modal';
-import Carousel from 'react-bootstrap/Carousel';
+import Modal from "react-bootstrap/Modal";
+import Carousel from "react-bootstrap/Carousel";
 import { useState, useEffect } from "react";
-import { modalClasses } from '@mui/material';
 
 export default function MyVerticallyCenteredModal(props) {
-    const styleSheets = {
-        footerStyle: {
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-        }
-    }
-
-
     const [showModal, setShowModal] = useState(false);
-    const [modalContent, setModalContent] = useState([{
-        contentTitle: "",
-        mainContent:"",
-        img:"",
-    }]);
+    const [modalContent, setModalContent] = useState([
+        {
+            contentTitle: "",
+            mainContent: "",
+            img: "",
+        },
+    ]);
     const VISITED = localStorage.getItem(`visited_${props.flag}`);
 
     const handleClose = () => {
-        console.log(modalContent)
-        setShowModal(false)
-        props.closeCallback()
-    }
-
-    
+        console.log(modalContent);
+        setShowModal(false);
+        props.closeCallback();
+    };
 
     useEffect(() => {
-
         const handleShowModal = () => {
             if (VISITED) {
-                console.log(`dtoList1 ${props.dtoList}`)
+                console.log(`dtoList1 ${props.dtoList}`);
                 return;
             }
 
             if (!VISITED) {
-                console.log(`dtoList ${props.dtoList}`)
-                setModalContent(props.dtoList)
+                console.log(`dtoList ${props.dtoList}`);
+                setModalContent(props.dtoList);
                 setShowModal(true);
-                console.log(`props.key ${props.flag} ${props.isShow}`)
+                console.log(`props.key ${props.flag} ${props.isShow}`);
                 localStorage.setItem(`visited_${props.flag}`, NaN);
             }
         };
-
-        handleShowModal()
+        handleShowModal();
+        // eslint-disable-next-line
     }, [VISITED]);
 
     return (
@@ -60,15 +48,15 @@ export default function MyVerticallyCenteredModal(props) {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter"/>
+                <Modal.Title id="contained-modal-title-vcenter" />
             </Modal.Header>
             <Modal.Body>
-                <Carousel variant="dark" slide={false}>              
+                <Carousel variant="dark" slide={false}>
                     <Carousel.Item>
                         <img
                             className="d-block w-100"
-                            src='img/puppy1.jpeg'
-                            style={{marginBottom:"160px", width:"10rem", height:"24rem"}}
+                            src="img/puppy1.jpeg"
+                            style={{ marginBottom: "160px", width: "10rem", height: "24rem" }}
                             alt="First slide"
                         />
                         <Carousel.Caption>
@@ -79,8 +67,8 @@ export default function MyVerticallyCenteredModal(props) {
                     <Carousel.Item>
                         <img
                             className="d-block w-100"
-                            src='img/laptop1.jpeg'
-                            style={{marginBottom:"160px", width:"10rem", height:"24rem"}}
+                            src="img/laptop1.jpeg"
+                            style={{ marginBottom: "160px", width: "10rem", height: "24rem" }}
                             alt="First slide"
                         />
 
@@ -92,16 +80,14 @@ export default function MyVerticallyCenteredModal(props) {
                     <Carousel.Item>
                         <img
                             className="d-block w-100"
-                            src='img/puppy2.jpeg'
-                            style={{marginBottom:"160px", width:"10rem", height:"24rem"}}
+                            src="img/puppy2.jpeg"
+                            style={{ marginBottom: "160px", width: "10rem", height: "24rem" }}
                             alt="First slide"
                         />
 
                         <Carousel.Caption>
                             <h3>이제 시작할 수 있어요!</h3>
-                            <p>
-                                실시간 영상 시청이 가능합니다
-                            </p>
+                            <p>실시간 영상 시청이 가능합니다</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                 </Carousel>
@@ -109,4 +95,3 @@ export default function MyVerticallyCenteredModal(props) {
         </Modal>
     );
 }
-
