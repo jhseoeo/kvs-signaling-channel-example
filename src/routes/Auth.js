@@ -1,6 +1,6 @@
 const express = require("express");
-const { register, login } = require("../lib/auth");
-const { notAuthorized } = require("../middlewares/authorized");
+const { register, login, isLoggedIn } = require("../lib/auth");
+const { notAuthorized, Authorized } = require("../middlewares/authorized");
 const router = express.Router();
 
 /**
@@ -27,6 +27,19 @@ router.post("/login", notAuthorized, async (req, res) => {
     const { userid, password } = req.body;
     const status = await login(userid, password);
     return res.status(status.statusCode).send(status);
+});
+
+/**
+ *
+ */
+router.get("/", Authorized, async (req, res) => {
+    try {
+        const response = await isLoggedIn(req.id);
+        return res.status(response.statusCode).json(response);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).send(e);
+    }
 });
 
 module.exports = router;

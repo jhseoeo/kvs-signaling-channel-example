@@ -103,7 +103,36 @@ async function login(userid, password) {
     }
 }
 
+/**
+ * Check current login token is valid
+ * @param {string} uid
+ * @returns {{statusCode: int, ok: boolean, message: string, nickname: string}}
+ */
+async function isLoggedIn(uid) {
+    try {
+        const userInfo = await User.findOne({
+            where: {
+                id: uid,
+            },
+        });
+
+        return {
+            statusCode: 200,
+            ok: true,
+            message: "logged in",
+            nickname: userInfo.nickname,
+        };
+    } catch (e) {
+        return {
+            statusCode: 500,
+            ok: false,
+            message: e,
+        };
+    }
+}
+
 module.exports = {
     register,
     login,
+    isLoggedIn,
 };
