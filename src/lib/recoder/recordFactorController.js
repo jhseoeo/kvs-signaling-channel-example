@@ -1,5 +1,6 @@
-const { min /*max*/ } = require("../util");
+const { min, max } = require("../util");
 
+const MIN_THRESHOLD = 1;
 const INITIAL_INTERVAL = 1000 * 2;
 const MAX_INTERVAL = 5000;
 const MAX_VALID_THRESHOLD = 90;
@@ -33,7 +34,7 @@ function getNewThreshold(oldThreshold, currentMatchDelta, success = false) {
     if (success) {
         return getValidThreshold(oldThreshold);
     } else if (currentMatchDelta > 0) {
-        return oldThreshold * (1 - currentMatchDelta);
+        return max(oldThreshold * (1 - currentMatchDelta), MIN_THRESHOLD);
     } else {
         return oldThreshold;
     }

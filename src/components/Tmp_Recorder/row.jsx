@@ -57,7 +57,7 @@ function Row(props) {
             if (result && result.videoDatas) {
                 tempList = result.videoDatas
                     .sort(function (a, b) {
-                        return a.recorded_at - b.recorded_at;
+                        return new Date(a.recorded_at) - new Date(b.recorded_at);
                     })
                     .map((v) => {
                         return {

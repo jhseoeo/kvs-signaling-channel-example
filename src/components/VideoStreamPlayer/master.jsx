@@ -12,6 +12,7 @@ const { RecordVideo, startDecideRecordLoop } = require("../../lib/recoder");
 const uploadClip = require("../../lib/clips/uploadClip");
 
 const LOCALVIEW_SHOW_TIMEOUT = 10 * 1000;
+const RECORD_TIME = 60 * 1000;
 
 /**
  * Page that produces video stream and transfers to Viewer
@@ -65,7 +66,7 @@ function Master() {
             await startDecideRecordLoop(
                 localStream.current,
                 async (thumbnail) => {
-                    const file = await RecordVideo(localStream.current, 5 * 1000);
+                    const file = await RecordVideo(localStream.current, RECORD_TIME);
                     uploadClip(file, thumbnail);
                 },
                 () => {
