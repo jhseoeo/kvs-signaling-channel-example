@@ -1,11 +1,7 @@
 const { getCookie } = require("../cookie");
 
-/**
- * Get information about signaling channel
- * @returns {Promise<Response>} Info about channel
- */
-async function getSignalingChannelInfo() {
-    const channel = await fetch(process.env.REACT_APP_PROXY_HOST + "/channel", {
+async function searchClipByTag(tag) {
+    return await fetch(process.env.REACT_APP_PROXY_HOST + "/clips/tag/" + tag, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -14,8 +10,6 @@ async function getSignalingChannelInfo() {
         },
         body: null,
     }).then((res) => res.json());
-
-    return channel;
 }
 
-module.exports = getSignalingChannelInfo;
+module.exports = searchClipByTag;

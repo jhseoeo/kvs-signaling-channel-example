@@ -1,13 +1,24 @@
-async function deleteSignalingChannel(channelName) {
-    await fetch(process.env.REACT_APP_PROXY_HOST + "/kinesis/" + channelName, {
+const { getCookie } = require("../cookie");
+
+/**
+ * Delete WebRTC Signaling Channel
+ * @returns {Promise<Response>} - Request status of deleting channel
+ */
+async function deleteSignalingChannel() {
+    // var blob = new Blob([]);
+
+    // navigator.sendBeacon();
+
+    return await fetch(process.env.REACT_APP_PROXY_HOST + "/channel", {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
+            authorization: getCookie("access"),
+            refresh: getCookie("refresh"),
         },
         body: null,
+        keepalive: true,
     }).then((res) => res.json());
-
-    alert("채널 삭제 성공!");
 }
 
 module.exports = deleteSignalingChannel;
