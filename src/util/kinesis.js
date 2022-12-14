@@ -3,8 +3,13 @@ const SigV4RequestSigner = require("amazon-kinesis-video-streams-webrtc").SigV4R
 const KinesisVideoSignalingChannels = require("aws-sdk/clients/kinesisvideosignalingchannels");
 require("dotenv").config();
 
+// Rquest Timeout Message
 const REQUEST_TIMEOUT_VALUE = "REQUEST TIMED OUT!";
+
+// Request Timeout Time
 const REQUEST_TIMEOUT = 15 * 1000;
+
+// Promise resolved after given time passes
 const requestTimeout = (time, value) => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
@@ -15,6 +20,7 @@ const requestTimeout = (time, value) => {
 
 class KinesisUtil {
     constructor() {
+        // AWS IAM Credential Data
         this.credential = {
             region: process.env.KINESIS_REGION,
             accessKeyId: process.env.KINESIS_ACCESS_KEY_ID,
@@ -30,6 +36,13 @@ class KinesisUtil {
         }
     }
 
+    /**
+     * Creates channel
+     * @param {string} ChannelName - Name of the channel
+     * @param {string} role - Role of the channel
+     * @param {string} clientId - Id of peer. Only vewer needs it
+     * @returns {{errorCode:number}} An object contains information about request, which includes Error Code
+     */
     async createChannel(ChannelName, role = "VIEWER", clientId = null) {
         try {
             const result = { errorCode: 400 };
@@ -92,6 +105,8 @@ class KinesisUtil {
         } catch (err) {
             console.error("An error is occured creating channel", err.message);
         }
+
+        return result;
     }
 
     async listEndpoints(channelARN, role) {
@@ -212,6 +227,4 @@ class KinesisUtil {
     }
 }
 
-module.exports = {
-    kinesis: new KinesisUtil(),
-};
+module.exports = new KinesisUtil();

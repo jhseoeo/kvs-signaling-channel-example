@@ -1,20 +1,34 @@
 const express = require("express");
+const https = require("https");
+const fs = require("fs");
 const path = require("path");
-const kinesisRouter = require("./routes/kinesis");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+
+const WebRTCChannelRouter = require("./routes/Channels");
+const AuthenticateRouter = require("./routes/Auth");
+const ClipsRouter = require("./routes/Clips");
+require("./models").sequelize.sync();
 require("dotenv").config();
 
 const app = express();
+const options = {
+    key: fs.readFileSync("./keys/key.pem", "utf-8"),
+    cert: fs.readFileSync("./keys/cert.pem", "utf-8"),
+    passphrase: process.env.HTTPS_PASSPHRASE,
+    rejectUnauthorized: false,
+};
 
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.set("views", __dirname + "/pages");
-app.set("view engine", "ejs");
-app.engine("html", require("ejs").renderFile);
-
-app.use(express.static(path.join(__dirname, "pages")));
+app.use(cookieParser());
+app.use(
+    bodyParser.urlencoded({
+        extended: true,
+    })
+);
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, "../public")));
 
 app.get("/", (req, res) => {
     return res.status(200).send({
@@ -22,12 +36,12 @@ app.get("/", (req, res) => {
     });
 });
 
-app.use("/kinesis", kinesisRouter);
+app.use("/channel", WebRTCChannelRouter);
+app.use("/auth", AuthenticateRouter);
+app.use("/clips", ClipsRouter);
 
-app.get("/test", async (req, res) => {
-    return res.render("test.html");
-});
+const server = https.createServer(options, app);
 
-app.listen(3000, () => {
-    console.log("app running on port : 3000");
+server.listen(8484, () => {
+    console.log("app running on port : 8484");
 });
