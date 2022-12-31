@@ -1,0 +1,96 @@
+.HashWrap {
+    margin-top: 12px;
+    color: rgb(52, 58, 64);
+    font-size: 1.125rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    letter-spacing: -0.6px;
+    color: #444241;
+    border-bottom: 1.6px solid gainsboro;
+    padding: 2px 2px 0px 2px;
+}
+
+.HashWrap2 {
+    margin-top: 24px;
+    color: rgb(52, 58, 64);
+    font-size: 1.125rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    letter-spacing: -0.6px;
+    color: #444241;
+    padding: 2px 2px 0px 2px;
+    position: relative;
+}
+
+.HashWrapOuter {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.HashWrapInner {
+    margin-top: 5px;
+    background: #d6dbf6;
+    border-radius: 56px;
+    padding: 8px 12px;
+    color: #565bf6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1rem;
+    line-height: 20px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.HashWrapCancel {
+    margin-left: 7px;
+    justify-content: center;
+    align-items: center;
+    font-size: 9px;
+}
+
+.HashInput {
+    width: auto;
+    margin: 5px;
+    display: inline-flex;
+    outline: none;
+    cursor: text;
+    line-height: 2rem;
+    /* margin-bottom: 0.75rem; */
+    min-width: 8rem;
+    border: none;
+}
+
+.HashInput2 {
+    margin-top: 120px;
+    margin-left: 20px;
+    width: auto;
+    display: inline-flex;
+    outline: none;
+    cursor: text;
+    line-height: 2rem;
+    border-radius: 56px;
+    padding-left: 20px;
+    padding-right: 40px;
+    /* margin-bottom: 0.75rem; */
+    min-width: 20rem;
+    border: 2px solid #e3e3e3;
+}
+
+.ClipDelete {
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+.ClipDelete:hover {
+    background-color: #e1e2e3;
+}
+
+.ClipDelete:active {
+    background-color: #d1d2d3;
+}
