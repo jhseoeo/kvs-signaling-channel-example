@@ -6,12 +6,12 @@ const kinesis = require("../util/kinesis");
  * @return {{statusCode: int, ok: boolean, message: string, createdChannelData?: object}} result of creating channel
  */
 async function createChannel(channelName) {
+    await kinesis.createChannel(channelName, "MASTER");
     try {
         return {
             statusCode: 200,
             ok: true,
             message: "a channel is successfully created",
-            channelData: await kinesis.createChannel(channelName, "MASTER"),
         };
     } catch (e) {
         return {
@@ -27,13 +27,13 @@ async function createChannel(channelName) {
  * @param {string} id - User ID
  * @return {{statusCode: int, ok: boolean, message: string, channelData?: object}} result of existing channel
  */
-async function searchChannel(channelName, clientId) {
+async function searchChannel(role, channelName, clientId) {
     try {
         return {
             statusCode: 200,
             ok: true,
             message: "a connection is created",
-            channelData: await kinesis.getChannelInfo(channelName, "VIEWER", clientId),
+            channelData: await kinesis.getChannelInfo(channelName, role, clientId),
         };
     } catch (e) {
         return {

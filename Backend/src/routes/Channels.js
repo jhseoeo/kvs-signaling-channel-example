@@ -5,10 +5,10 @@ const router = express.Router();
 /**
  * POST /channel - Create new channel
  */
-router.post("/:channelname", Authorized, async (req, res) => {
+router.post("/:channelname", async (req, res) => {
     const { channelname } = req.params;
     try {
-        const response = await createChannel();
+        const response = await createChannel(channelname);
         return res.status(response.statusCode).json(response);
     } catch (e) {
         console.error(e);
@@ -19,10 +19,10 @@ router.post("/:channelname", Authorized, async (req, res) => {
 /**
  * GET /channel - Get currently opened channel
  */
-router.get("/:channelname/:clientid", Authorized, async (req, res) => {
-    const { channelname, clientid } = req.params;
+router.get("/master/:channelname/:clientid", async (req, res) => {
+    const { channelname } = req.params;
     try {
-        const response = await searchChannel();
+        const response = await searchChannel("MASTER", channelname);
         return res.status(response.statusCode).json(response);
     } catch (e) {
         console.error(e);
@@ -31,12 +31,26 @@ router.get("/:channelname/:clientid", Authorized, async (req, res) => {
 });
 
 /**
- * POST /channel - Delete currently opened channel
+ * GET /channel - Get currently opened channel
  */
-router.delete("/:channelname", Authorized, async (req, res) => {
+router.get("/viewer/:channelname/:clientid", async (req, res) => {
+    const { channelname, clientid } = req.params;
+    try {
+        const response = await searchChannel("VIEWER", channelname, clientid);
+        return res.status(response.statusCode).json(response);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).send(e);
+    }
+});
+
+/**
+ * DELETE /channel - Delete currently opened channel
+ */
+router.delete("/:channelname", async (req, res) => {
     const { channelname } = req.params;
     try {
-        const response = await deleteChannel();
+        const response = await deleteChannel(channelname);
         return res.status(response.statusCode).json(response);
     } catch (e) {
         console.error(e);

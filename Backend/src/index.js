@@ -5,7 +5,6 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 
 const WebRTCChannelRouter = require("./routes/Channels");
-require("./models").sequelize.sync();
 require("dotenv").config();
 
 const app = express();
