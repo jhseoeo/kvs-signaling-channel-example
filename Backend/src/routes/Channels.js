@@ -1,14 +1,14 @@
 const express = require("express");
 const { createChannel, searchChannel, deleteChannel } = require("../lib/channel");
-const { Authorized } = require("../middlewares/authorized");
 const router = express.Router();
 
 /**
  * POST /channel - Create new channel
  */
-router.post("/", Authorized, async (req, res) => {
+router.post("/:channelname", Authorized, async (req, res) => {
+    const { channelname } = req.params;
     try {
-        const response = await createChannel(String(req.id));
+        const response = await createChannel();
         return res.status(response.statusCode).json(response);
     } catch (e) {
         console.error(e);
@@ -19,9 +19,10 @@ router.post("/", Authorized, async (req, res) => {
 /**
  * GET /channel - Get currently opened channel
  */
-router.get("/", Authorized, async (req, res) => {
+router.get("/:channelname/:clientid", Authorized, async (req, res) => {
+    const { channelname, clientid } = req.params;
     try {
-        const response = await searchChannel(String(req.id));
+        const response = await searchChannel();
         return res.status(response.statusCode).json(response);
     } catch (e) {
         console.error(e);
@@ -32,9 +33,10 @@ router.get("/", Authorized, async (req, res) => {
 /**
  * POST /channel - Delete currently opened channel
  */
-router.delete("/", Authorized, async (req, res) => {
+router.delete("/:channelname", Authorized, async (req, res) => {
+    const { channelname } = req.params;
     try {
-        const response = await deleteChannel(String(req.id));
+        const response = await deleteChannel();
         return res.status(response.statusCode).json(response);
     } catch (e) {
         console.error(e);

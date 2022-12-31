@@ -1,7 +1,6 @@
 const kinesisVideo = require("aws-sdk/clients/kinesisvideo");
 const SigV4RequestSigner = require("amazon-kinesis-video-streams-webrtc").SigV4RequestSigner;
 const KinesisVideoSignalingChannels = require("aws-sdk/clients/kinesisvideosignalingchannels");
-require("dotenv").config();
 
 // Rquest Timeout Message
 const REQUEST_TIMEOUT_VALUE = "REQUEST TIMED OUT!";
