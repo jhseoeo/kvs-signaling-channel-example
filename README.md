@@ -1,14 +1,34 @@
-# AWS KVS WebRTC Signaling Channel Example
+<div id="top"></div>
 
-## 개요
+<br />
+<div align="center">
+  <h2 align="center">KVS Signaling Channel Example</h2>
 
-Signaling Channel의 생성을 Frontend가 아닌 Backend에서 하게끔 Presign하게끔 한 예제입니다.
+  <p align="center">
+    An example of KVS WebRTC Signaling Channel
+</div>
 
----
+<br>
 
-## 사용 방법
+## About The Project
 
-### 설치
+This is an example of KVS WebRTC Signaling Channel that creates a presigned channel on backend, so any credentials can be hidden from clients.
+
+If you want more information(in Korean), you can get here:
+<https://junhyuk0801.github.io/posts/post/Cloud/AWS/AWS%20Kinesis%20Video%20Streaming>
+
+<br>
+
+### Built with
+
+-   [Node.js](https://nodejs.org/en/)
+-   [amazon-kinesis-video-streams-webrtc-sdk-js](https://github.com/awslabs/amazon-kinesis-video-streams-webrtc-sdk-js)
+-   Express (for backend)
+-   React (for frontend)
+
+<br>
+
+## Getting Started
 
 ```bash
 git clone https://github.com/junhyuk0801/aws-kvs-webtrtc-signaling-channel-example
@@ -20,18 +40,18 @@ npm i
 cd ..
 ```
 
-### Backend 시작
+### Start Backend
 
 ```bash
 cd Backend
 npm start
 ```
 
-### Frontend 시작
+### Start Frontend
 
 ```bash
-cd Backend
+cd Frontend
 npm start
 ```
 
-이후 http://localhost:3000에 접속해서 시도해봅시다.
+Then connect <http://localhost:3000> with your browser and check how it works!
